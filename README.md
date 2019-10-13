@@ -1,2 +1,2 @@
 # cache
-file-based memoization
+file-based caching
