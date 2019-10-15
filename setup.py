@@ -12,7 +12,7 @@ setup(name='cache',
       zip_safe=False,
       entry_points={
         'console_scripts': [
-            'cluster = cache.config:config',
+            'cache = cache.__main__:main',
         ],
       }
       )
