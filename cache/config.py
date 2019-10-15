@@ -20,7 +20,8 @@ def configure():
         dir_def, packages_def, exclusions_def)
     use_submodules = prompt_submodules(
         listr(packages), ask_submodules, modules_def)
-    write_configs(config_file, cache_directory, use_submodules, exclusions)
+    write_configs(
+        config_file, cache_directory, use_submodules, listr(exclusions))
     print('Configuration file saved to %s' % config_file)
 
 
@@ -29,10 +30,7 @@ def config_defaults():
     Reads in the configuration file, if it exists, and returns those values
     as defaults
     """
-    try:
-        dirname = os.path.dirname(__file__)
-    except(NameError):
-        dirname = os.getcwd()
+    dirname = os.path.dirname(__file__)
     config_file = os.path.join(
         os.path.abspath(os.path.join(dirname, '..', 'config')), 'config.txt')
     if os.path.exists(config_file):
@@ -179,18 +177,4 @@ def write_configs(config_file, cache_directory, submodules, exclusions):
         writer.writerow([])
         writer.writerow(['Exclusions:'])
         [writer.writerow([excl]) for excl in exclusions]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
