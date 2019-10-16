@@ -4,7 +4,7 @@ Complex file-based memoization and caching
 
 ## Command Line Setup ##
 
-* This package comes with a command line utility to facilitate set up:
+This package comes with a command line utility to facilitate set up:
 
 `cache configure` 
 
