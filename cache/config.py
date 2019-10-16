@@ -14,7 +14,8 @@ def configure():
     Reads in existing file, prompts for new configuration,
     and spits out config.txt
     """
-    config_file, dir_def, modules_def, exclusions_def = config_defaults()
+    config_file = config_path()
+    dir_def, modules_def, exclusions_def = config_defaults(config_file)
     packages_def, modules_def = get_default_package_info(modules_def)
     cache_directory, packages, ask_submodules, exclusions = user_prompts(
         dir_def, packages_def, exclusions_def)
@@ -25,19 +26,23 @@ def configure():
     print('Configuration file saved to %s' % config_file)
 
 
-def config_defaults():
+def config_path():
+    dirname = os.path.dirname(__file__)
+    config_file = os.path.join(
+        os.path.abspath(os.path.join(dirname, '..', 'config')), 'config.txt')
+    return config_file
+
+
+def config_defaults(config_file):
     """
     Reads in the configuration file, if it exists, and returns those values
     as defaults
     """
-    dirname = os.path.dirname(__file__)
-    config_file = os.path.join(
-        os.path.abspath(os.path.join(dirname, '..', 'config')), 'config.txt')
     if os.path.exists(config_file):
         dir_def, modules_def, exclusions_def = load_config(config_file)
     else:
         (dir_def, modules_def, exclusions_def) = ('None', 'None', 'None')
-    return config_file, dir_def, modules_def, exclusions_def
+    return dir_def, modules_def, exclusions_def
 
 
 def load_config(config_file):
@@ -178,3 +183,15 @@ def write_configs(config_file, cache_directory, submodules, exclusions):
         writer.writerow(['Exclusions:'])
         [writer.writerow([excl]) for excl in exclusions]
 
+
+def configuration_check():
+    """Checks if config file exists, and if not, runs configuration"""
+    config_file = config_path()
+    if not os.path.exists(config_file):
+        configure()
+
+
+def get_config():
+    """Returns config parameters"""
+    configuration_check()
+    return load_config(config_path())
