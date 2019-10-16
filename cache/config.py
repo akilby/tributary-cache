@@ -84,7 +84,7 @@ def user_prompts(dir_def, packages_def, exclusions_def):
                                   ' files', dir_def)
     packages = user_prompt('List of user-written packages to register,'
                            ' separated by commas: ', packages_def)
-    ask_submodules = user_prompt('Prompt to include all submodules '
+    ask_submodules = user_prompt('Prompt submodules '
                                  '(y/n)? ', inlist=['y', 'n'])
     exclusions = user_prompt('List of functions or modules to exclude '
                              'from code tree (rarely used)', exclusions_def)
