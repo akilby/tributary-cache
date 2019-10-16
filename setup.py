@@ -8,7 +8,7 @@ setup(name='cache',
       author_email='a.kilby@northeastern.edu',
       license='MIT',
       packages=['cache'],
-      install_requires=['stdlib_list'],
+      install_requires=['stdlib_list', 'dill'],
       zip_safe=False,
       entry_points={
         'console_scripts': [
