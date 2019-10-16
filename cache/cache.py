@@ -12,11 +12,13 @@ If you instantiate a Cache object, you use a function as
 a method of the class
 That function also remains a regular function and does not need
 to be memoized
-It's very kludgy, but very handy
-First, c = cache.Cache()
-Then any func can be run: out = c.func(args)
-This does its best to search child code but it definitely
-does not work perfectly
+It's still kludgy, but very handy
+
+Use:
+First, instantiate c = cache.Cache()
+Then any registered func can be run: out = c.func(args)
+This package does its best to search for all called child code but it
+definitely does not work perfectly
 For example most things called inside a class like RunScript don't
 seem to stick
 """
