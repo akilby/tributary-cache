@@ -25,12 +25,13 @@ seem to stick
 
 import os
 import time
-from .disk.operations import cache_to_disk, search_cache, purge_id_in_cache
-from .utils import pickle_read, pickle_dump, printn
 from .metadata import determine_metadata, refactor_metadata_for_readability
 from .initialize import directory, exclusion_list, globals_list
-from .globalslist import new_globals
-from .config import config_path, configure, configure_report
+from .config import config_path, configure_report, get_config, write_configs
+from .config import configure as configure_
+from .utils.utils import pickle_read, pickle_dump, printn
+from .utils.globalslist import new_globals
+from .disk.operations import cache_to_disk, search_cache, purge_id_in_cache
 
 
 class Cache(object):
@@ -39,15 +40,14 @@ class Cache(object):
                  directory=directory,
                  exclusion_list=exclusion_list,
                  noisily=False,
+                 configure=False,
                  config_file=None):
 
         self.directory = directory
         self.exclusion_list = exclusion_list
         self.counter_path = os.path.join(self.directory, 'counter.pkl')
         self.noisily = noisily
-        self.config_file = config_path() if not config_file else config_file
-        self.globals_list = (globals_list if not config_file
-                             else new_globals(config_file))
+        self.handle_configure(configure, config_file)
 
     def __getattr__(self, attr):
         return self.__get_global_handler(attr)
@@ -154,5 +154,35 @@ class Cache(object):
         configure_report(self.config_file)
 
     def configure(self):
-        self.config_file = configure(stash=True)
+        self.config_file = configure_(stash=True)
         self.globals_list = new_globals(self.config_file)
+
+    def handle_configure(self, configure):
+        if configure is False:
+            # use defaults
+            self.config_file = config_path()
+            self.globals_list = globals_list
+        elif configure is True:
+            # prompt for configure
+            self.configure()
+        elif isinstance(configure, str):
+            # read config from path
+            self.config_file = configure
+            self.globals_list = new_globals(configure)
+        elif isinstance(configure, dict):
+            # pass arguments directly in a dict,
+            # and otherwise rely on defaults
+            assert set(configure.keys()).issubset(
+                set(['directory', 'registry', 'exclusion_list']))
+            directory, registry, exclusions = get_config()
+            if 'directory' in configure.keys():
+                directory = configure['directory']
+            if 'registry' in configure.keys():
+                registry = configure['registry']
+            if 'directory' in configure.keys():
+                exclusions = configure['exclusion_list']
+            self.config_file = config_path(stash=True)
+            write_configs(self.config_file, directory, registry, exclusions)
+            self.globals_list = new_globals(self.config_file)
+        else:
+            raise Exception('Invalid configure')

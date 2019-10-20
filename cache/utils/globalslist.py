@@ -1,5 +1,5 @@
 import importlib
-from .config import load_config
+from ..config import load_config
 
 _old = globals().copy()
 
