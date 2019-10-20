@@ -195,3 +195,11 @@ def get_config():
     """Returns config parameters"""
     configuration_check()
     return load_config(config_path())
+
+
+def configure_report():
+    with open(config_path(), 'r') as f:
+        reader = list(csv.reader(f))
+        for line in reader:
+            linep = line[0] if line else ''
+            print(linep)

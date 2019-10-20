@@ -29,6 +29,7 @@ from .disk.operations import cache_to_disk, search_cache, purge_id_in_cache
 from .utils import pickle_read, pickle_dump, printn
 from .metadata import determine_metadata, refactor_metadata_for_readability
 from .initialize import directory, exclusion_list, globals_list
+from .config import configure_report
 
 
 class Cache(object):
@@ -143,3 +144,6 @@ class Cache(object):
         counter = pickle_read(self.counter_path)
         del counter[id_]
         pickle_dump(counter, self.counter_path)
+
+    def configure_report(self):
+        return configure_report()
