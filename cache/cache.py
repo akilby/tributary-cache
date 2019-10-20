@@ -79,7 +79,7 @@ class Cache(object):
         setattr(self, '_meta_%s' % id_,  metadata)
         setattr(self, '_meta_%s_was_archived' % id_, was_archived)
 
-        printn('** Function: %s\n' % func, self.noisily)
+        printn('%s\n' % '-'*150, self.noisily)
 
         return output
 
