@@ -43,7 +43,7 @@ def config_path(stash=False):
             'config.txt')
     return os.path.join(
         os.environ["TMPDIR"],
-        'cache_config_%s.pkl' % round(time.time()*1000000))
+        'cache_config_%s.txt' % round(time.time()*1000000))
 
 
 def config_defaults(config_file):
