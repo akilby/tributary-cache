@@ -6,7 +6,7 @@ import itertools
 import warnings
 import time
 from collections import OrderedDict
-from .utils import single_item, listr
+from .utils.utils import single_item, listr
 
 
 def configure(stash=False):
