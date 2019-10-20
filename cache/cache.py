@@ -59,7 +59,7 @@ class Cache(object):
 
         func = self.__global_handler.__func__.func_name
         printn('-'*os.get_terminal_size().columns, self.noisily)
-        printn('** Function: %s' % func, self.noisily)
+        printn('* Function: %s' % func, self.noisily)
 
         metadata = self.get_metadata(func, args, kwargs)
 
@@ -86,9 +86,9 @@ class Cache(object):
     def get_metadata(self, func, args, kwargs):
         metadata = determine_metadata(func, args, kwargs,
                                       self.exclusion_list, globals_list)
-        printn('** Metadata: %s '
+        printn('* Metadata: %s '
                % refactor_metadata_for_readability(metadata), self.noisily)
-        printn('** (identified) Called functions: %s'
+        printn('* (identified) Called functions: %s'
                % list(metadata['code'].keys()), self.noisily)
 
         return metadata
@@ -103,7 +103,7 @@ class Cache(object):
         try:
             output = pickle_read(os.path.join(self.directory,
                                               'output_%s.pkl' % id_))
-            printn('** Cache found; loaded from ID %s' % id_, self.noisily)
+            printn('* Cache found; loaded from ID %s' % id_, self.noisily)
             return id_, output
         except EOFError:
             print('%s: Ran out of input' % EOFError.__name__)
@@ -115,17 +115,17 @@ class Cache(object):
 
     def run_function(self, func, args, kwargs, metadata,
                      move_file_in_position):
-        printn('** Cache not found; running', self.noisily)
+        printn('* Cache not found; running', self.noisily)
         output = globals_list[func](*args, **kwargs)
         id_ = '%s' % round(time.time()*1000000)
-        printn('** Cache created with ID %s' % id_, self.noisily)
+        printn('* Cache created with ID %s' % id_, self.noisily)
         output = cache_to_disk(self.directory, id_, metadata,
                                output, move_file_in_position)
         self.counter_update(id_)
         return id_, output
 
     def purge_id(self, id_):
-        printn('** Cache purged with ID %s' % id_, self.noisily)
+        printn('* Cache purged with ID %s' % id_, self.noisily)
         id2_ = purge_id_in_cache(self.directory, id_)
         self.counter_pop(id_)
         return id2_
