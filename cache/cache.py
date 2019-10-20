@@ -29,7 +29,7 @@ from .disk.operations import cache_to_disk, search_cache, purge_id_in_cache
 from .utils import pickle_read, pickle_dump, printn
 from .metadata import determine_metadata, refactor_metadata_for_readability
 from .initialize import directory, exclusion_list, globals_list
-from .initialize import return_alternative_globals
+from .globalslist import return_alternative_globals
 from .config import config_path, configure, configure_report
 
 
