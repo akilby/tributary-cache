@@ -17,10 +17,13 @@ def configure():
     config_file = config_path()
     dir_def, modules_def, exclusions_def = config_defaults(config_file)
     packages_def, modules_def = get_default_package_info(modules_def)
-    cache_directory, packages, ask_submodules, exclusions = user_prompts(
-        dir_def, packages_def, exclusions_def)
+    (cache_directory,
+     packages,
+     ask_submodules,
+     if_no,
+     exclusions) = user_prompts(dir_def, packages_def, exclusions_def)
     use_submodules = prompt_submodules(
-        listr(packages), ask_submodules, modules_def)
+        listr(packages), ask_submodules, if_no, modules_def)
     write_configs(
         config_file, cache_directory, use_submodules, listr(exclusions))
     print('Configuration file saved to %s' % config_file)
@@ -86,9 +89,12 @@ def user_prompts(dir_def, packages_def, exclusions_def):
                            ' separated by commas: ', packages_def)
     ask_submodules = user_prompt('Prompt submodules '
                                  '(y/n)? ', inlist=['y', 'n'])
+    if_no = user_prompt('Keep current defaults (d) '
+                        'or import entire module (m)?',
+                        inlist=['d', 'm']) if ask_submodules == 'n' else None
     exclusions = user_prompt('List of functions or modules to exclude '
                              'from code tree (rarely used)', exclusions_def)
-    return cache_directory, packages, ask_submodules, exclusions
+    return cache_directory, packages, ask_submodules, if_no, exclusions
 
 
 def user_prompt(prompt_string, default=None, inlist=None):
@@ -111,7 +117,7 @@ def user_prompt(prompt_string, default=None, inlist=None):
     return output
 
 
-def prompt_submodules(packages, ask_submodules, modules_def):
+def prompt_submodules(packages, ask_submodules, if_no, modules_def):
     """
     First gets all submodules in the requested packages
     If user says to query about submodules, will list all of them
@@ -130,7 +136,7 @@ def prompt_submodules(packages, ask_submodules, modules_def):
         use_submodules = submodules_prompts(submodules, defaults)
         use_submodules = [key for key, val in use_submodules.items()
                           if val == 'y']
-    elif ask_submodules == 'n' and modules_def == {}:
+    elif ask_submodules == 'n' and (modules_def == {} or if_no == 'm'):
         warnings.warn('You are fully importing every module and submodule'
                       'of packages %s' % packages)
         use_submodules = submodules
