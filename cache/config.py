@@ -103,7 +103,7 @@ def user_prompts(dir_def, packages_def, exclusions_def):
                         'or import entire module (m)? ',
                         inlist=['d', 'm']) if ask_submodules == 'n' else None
     exclusions = user_prompt('List of functions or modules to exclude '
-                             'from code tree (rarely used)', exclusions_def)
+                             'from code tree (rarely used): ', exclusions_def)
     return cache_directory, packages, ask_submodules, if_no, exclusions
 
 
