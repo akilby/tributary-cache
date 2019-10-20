@@ -40,14 +40,13 @@ class Cache(object):
                  directory=directory,
                  exclusion_list=exclusion_list,
                  noisily=False,
-                 configure=False,
-                 config_file=None):
+                 configure=False):
 
         self.directory = directory
         self.exclusion_list = exclusion_list
         self.counter_path = os.path.join(self.directory, 'counter.pkl')
         self.noisily = noisily
-        self.handle_configure(configure, config_file)
+        self.handle_configure(configure)
 
     def __getattr__(self, attr):
         return self.__get_global_handler(attr)
