@@ -38,14 +38,15 @@ class Cache(object):
     def __init__(self,
                  directory=directory,
                  exclusion_list=exclusion_list,
-                 noisily=False):
+                 noisily=False,
+                 config_file=None):
 
         self.directory = directory
         self.exclusion_list = exclusion_list
         self.counter_path = os.path.join(self.directory, 'counter.pkl')
         self.noisily = noisily
         self.globals_list = globals_list
-        self.config_file = config_path()
+        self.config_file = config_path() if not config_file else config_file
 
     def __getattr__(self, attr):
         return self.__get_global_handler(attr)
