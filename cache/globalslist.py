@@ -10,7 +10,7 @@ def new_globals(config_file):
     for item in list(current_globals.keys()):
         if item not in list(old_globals.keys()) + ['old_globals', 'new_globals']:
             print('deleting item', item)
-            del item
+            globals.pop(item)
 
     directory, registry, exclusion_list = load_config(config_file)
 
