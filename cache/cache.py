@@ -146,4 +146,4 @@ class Cache(object):
         pickle_dump(counter, self.counter_path)
 
     def configure_report(self):
-        return configure_report()
+        configure_report()
