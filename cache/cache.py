@@ -45,8 +45,8 @@ class Cache(object):
         self.exclusion_list = exclusion_list
         self.counter_path = os.path.join(self.directory, 'counter.pkl')
         self.noisily = noisily
-        self.globals_list = globals_list
         self.config_file = config_path() if not config_file else config_file
+        self.globals_list = return_alternative_globals(self.config_file)
 
     def __getattr__(self, attr):
         return self.__get_global_handler(attr)
