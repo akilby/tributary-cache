@@ -1,7 +1,7 @@
 import glob
 import os
 import time
-from .utils import pickle_read, pickle_dump
+from .utils.utils import pickle_read, pickle_dump
 from .disk.operations import purge_id_in_cache
 
 
