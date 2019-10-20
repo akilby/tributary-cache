@@ -59,6 +59,9 @@ def search_cache(directory, metadata):
         except AttributeError as a:
             print('%s has created some problem' % item)
             raise Exception(AttributeError.__name__, ": ", a.args[0])
+        except ModuleNotFoundError as m:
+            print('%s has created some problem' % item)
+            raise Exception(ModuleNotFoundError.__name__, ": ", m.args[0])
         if meta == metadata:
             id_ = os.path.basename(item)
             id_ = id_.split('metadata_')[1].replace('.pkl', '')
