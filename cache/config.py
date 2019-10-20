@@ -90,7 +90,7 @@ def user_prompts(dir_def, packages_def, exclusions_def):
     ask_submodules = user_prompt('Prompt submodules '
                                  '(y/n)? ', inlist=['y', 'n'])
     if_no = user_prompt('Keep current defaults (d) '
-                        'or import entire module (m)?',
+                        'or import entire module (m)? ',
                         inlist=['d', 'm']) if ask_submodules == 'n' else None
     exclusions = user_prompt('List of functions or modules to exclude '
                              'from code tree (rarely used)', exclusions_def)
