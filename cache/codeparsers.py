@@ -17,11 +17,26 @@ def code_tree(func, args, kwargs, exclusion_list, globals_list):
     return code
 
 
-def get_source(func, globals_list):
+def get_source(func, globals_list, remove_docs=True):
     sc = dill.source.getsource(globals_list[func])
     assert (sc.startswith('def %s(' % func)
             or sc.startswith('class %s(' % func))
+    if remove_docs:
+        return remove_docstring(sc)
     return sc
+
+
+def remove_docstring(code):
+    if len(code.split("'''")) == 3:
+        c = code.split("'''")
+    elif len(code.split('"""')) == 3:
+        c = code.split('"""')
+    else:
+        return code
+    left = c[0][:c[0].rfind('\n')] + '\n'
+    right = c[2][c[2].find('\n')+1:]
+    new_code = left + right
+    return new_code
 
 
 def get_all_children(func, args, kwargs, exclusion_list, globals_list):
