@@ -30,7 +30,7 @@ from .initialize import directory, exclusion_list, globals_list
 from .config import config_path, configure_report, get_config, write_configs
 from .config import configure as configure_
 from .utils.utils import pickle_read, pickle_dump, printn
-from .utils.globalslist import new_globals
+from .utils.globalslister import new_globals
 from .disk.operations import cache_to_disk, search_cache, purge_id_in_cache
 
 
