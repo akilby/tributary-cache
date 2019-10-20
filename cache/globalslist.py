@@ -8,7 +8,7 @@ def new_globals(config_file):
 
     current_globals = globals().copy()
     for item in list(current_globals.keys()):
-        if item not in list(old_globals.keys()):
+        if item not in list(old_globals.keys()) + ['old_globals', 'new_globals']:
             print('deleting item', item)
             del item
 
