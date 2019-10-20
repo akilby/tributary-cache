@@ -33,7 +33,7 @@ def hash_numpy_array(obj):
 def complex_hasher(obj):
     hasher_count = 0
     if 'pandas' in packages_list:
-        if isinstance(obj, pd.DataFrame):
+        if isinstance(obj, pd.DataFrame) or isinstance(obj, pd.Series):
             out = hash_pandas_object(obj).sum()
             hasher_count += 1
     if 'scipy' in packages_list:
