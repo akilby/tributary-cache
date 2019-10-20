@@ -156,6 +156,8 @@ def prompt_submodules(packages, ask_submodules, if_no, modules_def):
 
 
 def list_all_submodules(package_name):
+    if package_name == '':
+        return []
     subpackages, submodules = list_subs(package_name)
     for subp in subpackages:
         subpackages1, submodules1 = list_subs(subp)
