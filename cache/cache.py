@@ -154,4 +154,3 @@ class Cache(object):
     def configure(self):
         self.config_file = configure(stash=True)
         self.globals_list = return_alternative_globals(self.config_file)
-        return self
