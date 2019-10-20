@@ -1,5 +1,5 @@
-from .objecthashers import complex_hasher
-from .codeparsers import code_tree
+from .utils.objecthashers import complex_hasher
+from .utils.codeparsers import code_tree
 
 
 def determine_metadata(func, args, kwargs, exclusion_list, globals_list):
