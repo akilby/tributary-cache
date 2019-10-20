@@ -58,6 +58,7 @@ class Cache(object):
                          **kwargs):
 
         func = self.__global_handler.__func__.func_name
+        printn('-'*150, self.noisily)
         printn('** Function: %s' % func, self.noisily)
 
         metadata = self.get_metadata(func, args, kwargs)
@@ -77,6 +78,8 @@ class Cache(object):
 
         setattr(self, '_meta_%s' % id_,  metadata)
         setattr(self, '_meta_%s_was_archived' % id_, was_archived)
+
+        printn('** Function: %s\n' % func, self.noisily)
 
         return output
 
