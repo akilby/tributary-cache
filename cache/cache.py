@@ -30,7 +30,7 @@ from .utils import pickle_read, pickle_dump, printn
 from .metadata import determine_metadata, refactor_metadata_for_readability
 from .initialize import directory, exclusion_list, globals_list
 from .initialize import return_alternative_globals
-from .config import configure, configure_report
+from .config import config_path, configure, configure_report
 
 
 class Cache(object):
@@ -45,6 +45,7 @@ class Cache(object):
         self.counter_path = os.path.join(self.directory, 'counter.pkl')
         self.noisily = noisily
         self.globals_list = globals_list
+        self.config_file = config_path()
 
     def __getattr__(self, attr):
         return self.__get_global_handler(attr)
@@ -148,7 +149,7 @@ class Cache(object):
         pickle_dump(counter, self.counter_path)
 
     def configure_report(self):
-        configure_report()
+        configure_report(self.config_file)
 
     def configure(self):
         self.config_file = configure(stash=True)
