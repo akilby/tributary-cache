@@ -5,6 +5,12 @@ old_globals = globals().copy()
 
 
 def new_globals(config_file):
+
+    current_globals = globals().copy()
+    for item in list(current_globals.keys()):
+        if item not in list(old_globals.keys()):
+            del item
+
     directory, registry, exclusion_list = load_config(config_file)
 
     [globals().update(vars(importlib.import_module(module)))
