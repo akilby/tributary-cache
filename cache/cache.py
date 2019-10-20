@@ -43,6 +43,7 @@ class Cache(object):
         self.exclusion_list = exclusion_list
         self.counter_path = os.path.join(self.directory, 'counter.pkl')
         self.noisily = noisily
+        self.globals_list = globals_list
 
     def __getattr__(self, attr):
         return self.__get_global_handler(attr)
@@ -86,7 +87,7 @@ class Cache(object):
 
     def get_metadata(self, func, args, kwargs):
         metadata = determine_metadata(func, args, kwargs,
-                                      self.exclusion_list, globals_list)
+                                      self.exclusion_list, self.globals_list)
         printn('* Metadata: %s '
                % refactor_metadata_for_readability(metadata), self.noisily)
         printn('* (identified) Called functions: %s'
@@ -117,7 +118,7 @@ class Cache(object):
     def run_function(self, func, args, kwargs, metadata,
                      move_file_in_position):
         printn('* Cache not found; running', self.noisily)
-        output = globals_list[func](*args, **kwargs)
+        output = self.globals_list[func](*args, **kwargs)
         id_ = '%s' % round(time.time()*1000000)
         printn('* Cache created with ID %s' % id_, self.noisily)
         output = cache_to_disk(self.directory, id_, metadata,
