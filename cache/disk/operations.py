@@ -2,7 +2,7 @@ import glob
 import os
 import shutil
 import warnings
-from ..utils import pickle_dump, pickle_read
+from .utils.utils import pickle_dump, pickle_read
 
 
 def cache_to_disk(directory,
