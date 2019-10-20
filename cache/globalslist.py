@@ -1,15 +1,14 @@
 import importlib
 from .config import load_config
 
-old_globals = globals().copy()
+_old = globals().copy()
 
 
 def new_globals(config_file):
 
     current_globals = globals().copy()
     for item in list(current_globals.keys()):
-        if item not in list(old_globals.keys()) + ['old_globals', 'new_globals']:
-            print('deleting item', item)
+        if item not in list(_old.keys()) + ['_old', 'new_globals']:
             globals().pop(item)
 
     directory, registry, exclusion_list = load_config(config_file)
