@@ -213,8 +213,10 @@ def get_config():
     return load_config(config_path())
 
 
-def configure_report():
-    with open(config_path(), 'r') as f:
+def configure_report(config_file=None):
+    if not config_file:
+        config_file = config_path()
+    with open(config_file, 'r') as f:
         reader = list(csv.reader(f))
         for line in reader:
             linep = line[0] if line else ''
