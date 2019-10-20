@@ -54,7 +54,11 @@ def refactor_output(output, desti, move_file_in_position):
 
 def search_cache(directory, metadata):
     for item in glob.glob(os.path.join(directory, 'metadata_*.pkl')):
-        meta = pickle_read(item)
+        try:
+            meta = pickle_read(item)
+        except AttributeError as a:
+            print('%s has created some problem' % item)
+            raise Exception(AttributeError.__name__, ": ", a.args[0])
         if meta == metadata:
             id_ = os.path.basename(item)
             id_ = id_.split('metadata_')[1].replace('.pkl', '')
