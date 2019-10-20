@@ -4,17 +4,21 @@ import os
 import pkgutil
 import itertools
 import warnings
+import time
 from collections import OrderedDict
 from .utils import single_item, listr
 
 
-def configure():
+def configure(stash=False):
     """
-    Top level configuraiton script
+    Top level configuration script
     Reads in existing file, prompts for new configuration,
     and spits out config.txt
+
+    Can also direct to a temporary stash file, used for
+    cache object-specific configuration
     """
-    config_file = config_path()
+    config_file = config_path(stash=stash)
     dir_def, modules_def, exclusions_def = config_defaults(config_file)
     packages_def, modules_def = get_default_package_info(modules_def)
     (cache_directory,
@@ -27,13 +31,19 @@ def configure():
     write_configs(
         config_file, cache_directory, use_submodules, listr(exclusions))
     print('Configuration file saved to %s' % config_file)
+    if stash:
+        return config_file
 
 
-def config_path():
-    dirname = os.path.dirname(__file__)
-    config_file = os.path.join(
-        os.path.abspath(os.path.join(dirname, '..', 'config')), 'config.txt')
-    return config_file
+def config_path(stash=False):
+    if not stash:
+        dirname = os.path.dirname(__file__)
+        return os.path.join(
+            os.path.abspath(os.path.join(dirname, '..', 'config')),
+            'config.txt')
+    return os.path.join(
+        os.environ["TMPDIR"],
+        'cache_config_%s.pkl' % round(time.time()*1000000))
 
 
 def config_defaults(config_file):
