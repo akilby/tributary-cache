@@ -35,12 +35,16 @@ def configure(stash=False):
         return config_file
 
 
-def config_path(stash=False):
+def config_path(stash=False, name=None):
     if not stash:
         dirname = os.path.dirname(__file__)
         return os.path.join(
             os.path.abspath(os.path.join(dirname, '..', 'config')),
             'config.txt')
+        if name:
+            return os.path.join(
+                os.path.abspath(os.path.join(dirname, '..', 'config')),
+                'config_%s.txt' % name)
     return os.path.join(
         os.environ["TMPDIR"],
         'cache_config_%s.txt' % round(time.time()*1000000))
