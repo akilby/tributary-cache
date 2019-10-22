@@ -230,3 +230,45 @@ def configure_report(config_file=None):
         for line in reader:
             linep = line[0] if line else ''
             print(linep)
+
+
+def configure_package(name):
+    config_file = config_path(name='claims_data')
+    noisily = user_prompt('Cache noisily (y) or quietly (n)? ',
+                          inlist=['y', 'n'])
+    rerun = user_prompt('Rerun everything? (y/n) ', inlist=['y', 'n'])
+    noisily = True if noisily == 'y' else False
+    rerun = True if rerun == 'y' else False
+    write_configs_package(config_file, noisily, rerun)
+    print('Configuration file saved to %s' % config_file)
+
+
+def write_configs_package(config_file, noisily, rerun):
+    """
+    Writes configurations to file for package
+    """
+    with open(config_file, 'w') as f:
+        writer = csv.writer(f, delimiter='\n')
+        writer.writerow(['Noisily:'])
+        writer.writerow([noisily])
+        writer.writerow([])
+        writer.writerow([])
+        writer.writerow(['Rerun:'])
+        writer.writerow([rerun])
+
+
+def load_config_package(config_file):
+    """
+    Loads and parses the configuration text file
+    """
+    with open(config_file, 'r') as f:
+        reader = csv.reader(f)
+        config_dets = list(reader)
+        config_dets = list(itertools.chain.from_iterable(config_dets))
+        idx1 = config_dets.index('Noisily:')
+        idx2 = config_dets.index('Rerun:')
+        noisily = single_item(config_dets[idx1+1:idx2])
+        rerun = single_item(config_dets[idx2+1:])
+    noisily = True if noisily == 'True' else False
+    rerun = True if rerun == 'True' else False
+    return noisily, rerun
