@@ -38,9 +38,10 @@ def configure(stash=False):
 def config_path(stash=False, name=None):
     if not stash:
         dirname = os.path.dirname(__file__)
-        return os.path.join(
-            os.path.abspath(os.path.join(dirname, '..', 'config')),
-            'config.txt')
+        if not name:
+            return os.path.join(
+                os.path.abspath(os.path.join(dirname, '..', 'config')),
+                'config.txt')
         if name:
             return os.path.join(
                 os.path.abspath(os.path.join(dirname, '..', 'config')),
