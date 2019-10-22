@@ -40,12 +40,14 @@ class Cache(object):
                  directory=directory,
                  exclusion_list=exclusion_list,
                  noisily=False,
-                 configure=False):
+                 configure=False,
+                 force_rerun=False):
 
         self.directory = directory
         self.exclusion_list = exclusion_list
         self.counter_path = os.path.join(self.directory, 'counter.pkl')
         self.noisily = noisily
+        self.rerun = force_rerun
         self.handle_configure(configure)
 
     def __getattr__(self, attr):
@@ -68,6 +70,7 @@ class Cache(object):
 
         metadata = self.get_metadata(func, args, kwargs)
 
+        rerun = True if self.rerun else rerun
         id_ = self.locate_id(metadata, rerun)
         id_, output = self.load_id(id_)
 
