@@ -159,9 +159,11 @@ def list_all_submodules(package_name):
     if package_name == '':
         return []
     subpackages, submodules = list_subs(package_name)
-    for subp in subpackages:
+    subpackages = set(subpackages)
+    while subpackages:
+        subp = subpackages.pop()
         subpackages1, submodules1 = list_subs(subp)
-        subpackages = subpackages1 + subpackages
+        subpackages = set(subpackages1) | subpackages
         submodules = submodules1 + submodules
     return submodules
 
