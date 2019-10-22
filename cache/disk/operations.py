@@ -73,6 +73,7 @@ def search_cache(directory, metadata):
             print('meta: ', meta)
             print('metadata: ', metadata)
             print('Item creating problem: ', item)
+            return meta, metadata
             raise Exception(ValueError.__name__, ": ", v.args[0])
     return None
 
