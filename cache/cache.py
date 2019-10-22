@@ -41,13 +41,13 @@ class Cache(object):
                  exclusion_list=exclusion_list,
                  noisily=False,
                  configure=False,
-                 force_rerun=False):
+                 rerun=False):
 
         self.directory = directory
         self.exclusion_list = exclusion_list
         self.counter_path = os.path.join(self.directory, 'counter.pkl')
         self.noisily = noisily
-        self.rerun = force_rerun
+        self.rerun = rerun
         self.handle_configure(configure)
 
     def __getattr__(self, attr):
