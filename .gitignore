@@ -90,7 +90,7 @@ ENV/
 
 # My files
 .tempdata
-config/config.txt
+config/
 
 # .DS_Store
 .DS_Store
