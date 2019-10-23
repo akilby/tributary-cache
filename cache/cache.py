@@ -29,7 +29,7 @@ from .metadata import determine_metadata, refactor_metadata_for_readability
 from .initialize import directory, exclusion_list, globals_list
 from .config import config_path, configure_report, get_config, write_configs
 from .config import configure as configure_
-from .utils.utils import pickle_read, pickle_dump, printn
+from .utils.utils import pickle_read, pickle_dump, printn, terminal_width
 from .utils.globalslister import new_globals
 from .disk.operations import cache_to_disk, search_cache, purge_id_in_cache
 
@@ -65,7 +65,7 @@ class Cache(object):
                          **kwargs):
 
         func = self.__global_handler.__func__.func_name
-        printn('-'*os.get_terminal_size().columns, self.noisily)
+        printn('-'*terminal_width(), self.noisily)
         printn('* Function: %s' % func, self.noisily)
 
         metadata = self.get_metadata(func, args, kwargs)
@@ -87,7 +87,7 @@ class Cache(object):
         setattr(self, '_meta_%s' % id_,  metadata)
         setattr(self, '_meta_%s_was_archived' % id_, was_archived)
 
-        printn('%s\n' % ('-'*os.get_terminal_size().columns), self.noisily)
+        printn('%s\n' % ('-'*terminal_width()), self.noisily)
 
         return output
 

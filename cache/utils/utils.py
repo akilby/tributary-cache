@@ -1,5 +1,6 @@
 import pickle
 import subprocess
+import os
 
 
 def pickle_dump(thing, writefile):
@@ -34,3 +35,11 @@ def get_system_packages():
           for x in out.decode('utf-8').splitlines()]
     li2 = [x[0] for x in li if len(x) == 2]
     return li2
+
+
+def terminal_width():
+    try:
+        return os.get_terminal_size().columns
+    except OSError:
+        return 200
+    
