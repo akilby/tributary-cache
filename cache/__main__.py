@@ -25,7 +25,7 @@ class CommandLine(object):
             help='can optionally specify a specific package to configure')
 
     def configure(self, args):
-        print(args)
+        print(args.package)
         configure()
 
 
