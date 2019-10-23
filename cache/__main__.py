@@ -20,8 +20,12 @@ class CommandLine(object):
     def setup_configure_parser(self, subparsers):
         parser_configure = subparsers.add_parser('configure')
         parser_configure.set_defaults(func=self.configure)
+        parser_configure.add_argument(
+            '--package', required=False,
+            help='can optionally specify a specific package to configure')
 
     def configure(self, args):
+        print(args)
         configure()
 
 
