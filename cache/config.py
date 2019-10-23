@@ -234,9 +234,13 @@ def configure_report(config_file=None):
 
 def configure_package(name):
     config_file = config_path(name='claims_data')
+    noisily_def, rerun_def = config_defaults_package(config_file)
     noisily = user_prompt('Cache noisily (y) or quietly (n)? ',
+                          default=noisily_def,
                           inlist=['y', 'n'])
-    rerun = user_prompt('Rerun everything? (y/n) ', inlist=['y', 'n'])
+    rerun = user_prompt('Rerun everything? (y/n) ',
+                        default=rerun_def,
+                        inlist=['y', 'n'])
     noisily = True if noisily == 'y' else False
     rerun = True if rerun == 'y' else False
     write_configs_package(config_file, noisily, rerun)
@@ -271,4 +275,18 @@ def load_config_package(config_file):
         rerun = single_item(config_dets[idx2+1:])
     noisily = True if noisily == 'True' else False
     rerun = True if rerun == 'True' else False
+    return noisily, rerun
+
+
+def config_defaults_package(config_file):
+    """
+    Reads in the configuration file, if it exists, and returns those values
+    as defaults
+    """
+    if os.path.exists(config_file):
+        noisily, rerun = load_config_package(config_file)
+        noisily = 'y' if noisily else False
+        rerun = 'y' if rerun else False
+    else:
+        (noisily, rerun) = ('None', 'None')
     return noisily, rerun
