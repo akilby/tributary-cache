@@ -57,7 +57,7 @@ def get_all_children(func, args, kwargs, exclusion_list, globals_list):
 
 
 def get_cached_children(func, globals_list,
-                        cache_string_list=['cache.Cache()']):
+                        cache_string_list=['cache.Cache(']):
     sc = dill.source.getsource(globals_list[func])
     assert (sc.startswith('def %s(' % func)
             or sc.startswith('class %s(object):' % func))
@@ -71,6 +71,17 @@ def get_cached_children(func, globals_list,
                      and not x.split(cacher_name)[0][-1].isalpha()]))
         else:
             other_child_functions = []
+    import_list = [x.split('import')[1].strip()
+                   for x in sc.splitlines()
+                   if x.strip().startswith('from') and 'import' in x]
+    for potential_cacher_name in import_list:
+        cacher_name = potential_cacher_name + '.'
+        other_child_functions2 = list(
+            set([x.split(cacher_name)[1].split('(')[0]
+                 for x in sc.splitlines() if cacher_name in x
+                 and not x.split(cacher_name)[0][-1].isalpha()
+                 and not x.split(cacher_name)[1].split('(')[0] == 'Cache']))
+        other_child_functions = other_child_functions + other_child_functions2
     return other_child_functions
 
 
