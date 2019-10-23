@@ -1,5 +1,5 @@
 import argparse
-from .config import configure
+from .config import configure, configure_package
 
 
 class CommandLine(object):
@@ -25,8 +25,10 @@ class CommandLine(object):
             help='can optionally specify a specific package to configure')
 
     def configure(self, args):
-        print(args.package)
-        configure()
+        if not args.package:
+            configure()
+        else:
+            configure_package(args.package)
 
 
 def main():
