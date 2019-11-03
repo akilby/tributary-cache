@@ -3,6 +3,7 @@ import os
 import shutil
 import warnings
 from ..utils.utils import pickle_dump, pickle_read
+from ..utils.codeparsers import remove_all_docstrings_from_metadata
 
 
 def cache_to_disk(directory,
@@ -63,7 +64,7 @@ def search_cache(directory, metadata):
             print('%s has created some problem' % item)
             raise Exception(ModuleNotFoundError.__name__, ": ", m.args[0])
         try:
-            if meta == metadata:
+            if remove_all_docstrings_from_metadata(meta) == metadata:
                 id_ = os.path.basename(item)
                 id_ = id_.split('metadata_')[1].replace('.pkl', '')
                 return id_
