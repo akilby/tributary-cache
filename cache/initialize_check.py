@@ -42,9 +42,6 @@ for module in registry:
                 warnings.warn('Warning: updating function %s using module %s '
                               'created conflict' % (fct, module))
                 problem_funcs.append(fct)
-                print(problem_funcs)
     globals().update(vars(importlib.import_module(module)))
-
-print(problem_funcs)
 
 globals_list = globals()
