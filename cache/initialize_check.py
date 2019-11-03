@@ -37,10 +37,11 @@ for module in registry:
     new_funcs = vars(importlib.import_module(module))
     funcs = clean_funcs(list(new_funcs.keys()))
     for fct in funcs:
-        if new_funcs[fct] != globals()[fct]:
-            warnings.warn('Warning: updating function %s using module %s '
-                          'created conflict' % (fct, module))
-            problem_funcs.append(fct)
+        if fct in globals():
+            if new_funcs[fct] != globals()[fct]:
+                warnings.warn('Warning: updating function %s using module %s '
+                              'created conflict' % (fct, module))
+                problem_funcs.append(fct)
     globals().update(vars(importlib.import_module(module)))
 
 globals_list = globals()
