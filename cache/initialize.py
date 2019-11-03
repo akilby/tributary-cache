@@ -9,8 +9,8 @@ directory, registry, exclusion_list = get_config()
 
 def clean_funcs(funcs):
     funcs = [name for name in funcs if not hasattr(builtins, name)]
-    funcs = [name for name in funcs if not check_external(name)]
     funcs = [name for name in funcs if not check_more_builtins(name)]
+    funcs = [name for name in funcs if not check_external(name)]
     funcs = [name for name in funcs if not name.startswith('__')]
     return funcs
 
