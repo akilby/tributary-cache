@@ -1,6 +1,8 @@
 import pickle
 import subprocess
 import os
+import importlib
+from stdlib_list import stdlib_list
 
 
 def pickle_dump(thing, writefile):
@@ -42,4 +44,19 @@ def terminal_width():
         return os.get_terminal_size().columns
     except OSError:
         return 200
-    
+
+
+def check_external(name):
+    if importlib.util.find_spec(name):
+        if ('python' in importlib.util.find_spec(name).origin
+            and ('base' in importlib.util.find_spec(name).origin
+                 or 'site-packages' in importlib.util.find_spec(name).origin)):
+            return True
+    return False
+
+
+def check_more_builtins(name):
+    libraries = stdlib_list("3.7")
+    if name in libraries:
+        return True
+    return False

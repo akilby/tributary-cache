@@ -1,26 +1,10 @@
 import importlib
 from .config import get_config
-from stdlib_list import stdlib_list
+from ..utils import check_external, check_more_builtins
 import builtins
 import warnings
 
 directory, registry, exclusion_list = get_config()
-
-
-def check_external(name):
-    if importlib.util.find_spec(name):
-        if ('python' in importlib.util.find_spec(name).origin
-            and ('base' in importlib.util.find_spec(name).origin
-                 or 'site-packages' in importlib.util.find_spec(name).origin)):
-            return True
-    return False
-
-
-def check_more_builtins(name):
-    libraries = stdlib_list("3.7")
-    if name in libraries:
-        return True
-    return False
 
 
 def clean_funcs(funcs):
