@@ -36,16 +36,7 @@ def refactor_metadata_for_storage(metadata):
     args, kwargs = m['args'], m['kwargs']
     args = [complex_hasher(arg) for arg in args]
     args = hash_arglist(args)
-    kw = kwargs.copy()
-    for key, val in kw.items():
-        kw[key] = complex_hasher(val)
-        if isinstance(val, list):
-            kw[key] = [complex_hasher(arg) for arg in val]
-        elif isinstance(val, dict):
-            m3 = val.copy()
-            for key_small, val_small in m3.items():
-                m3[key_small] = complex_hasher(val_small)
-            kw[key] = m3
+    kw = dict_hasher(kwargs.copy())
     m2['args'] = tuple(args)
     m2['kwargs'] = kw
     return m2
@@ -58,9 +49,13 @@ def hash_arglist(arglist):
         for arg in arglist:
             if isinstance(arg, list) or isinstance(arg, tuple):
                 arg = hash_all_in_arglist(arg)
+            elif isinstance(arg, dict):
+                arg = dict_hasher(arg.copy())
             argsnew.append(arg)
     if isinstance(arglist, tuple):
         return tuple(argsnew)
+    elif isinstance(arglist, list):
+        return argsnew
     return arglist
 
 
@@ -78,3 +73,17 @@ def hash_all_in_arglist(arglist):
     if isinstance(arglist, tuple):
         return tuple(argsnew)
     return argsnew
+
+
+def dict_hasher(kw):
+    kw = kw.copy()
+    for key, val in kw.items():
+        kw[key] = complex_hasher(val)
+        if isinstance(val, list):
+            kw[key] = [complex_hasher(arg) for arg in val]
+        elif isinstance(val, dict):
+            m3 = val.copy()
+            for key_small, val_small in m3.items():
+                m3[key_small] = complex_hasher(val_small)
+            kw[key] = m3
+    return kw
