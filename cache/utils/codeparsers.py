@@ -39,6 +39,12 @@ def remove_docstring(code):
     return new_code
 
 
+def remove_all_docstrings_from_metadata(m):
+    for key, val in m['code'].items():
+        m['code'][key] = remove_docstring(val)
+    return m
+
+
 def get_all_children(func, args, kwargs, exclusion_list, globals_list):
     child_funcs = func_calls(globals_list[func], globals_list)
     arg_children = [[x.__name__] + func_calls(x, globals_list) for x in args
