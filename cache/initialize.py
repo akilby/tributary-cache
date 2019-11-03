@@ -1,6 +1,6 @@
 import importlib
 from .config import get_config
-from ..utils import check_external, check_more_builtins
+from .utils.utils import check_external, check_more_builtins
 import builtins
 import warnings
 
