@@ -47,6 +47,7 @@ def terminal_width():
 
 
 def check_external(name):
+    print(name)
     if importlib.util.find_spec(name):
         if ('python' in importlib.util.find_spec(name).origin
             and ('base' in importlib.util.find_spec(name).origin
