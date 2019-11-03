@@ -57,6 +57,17 @@ def search_cache(directory, metadata):
     for item in glob.glob(os.path.join(directory, 'metadata_*.pkl')):
         try:
             meta = pickle_read(item)
+            if item == '/scratch/akilby/Output/Cache/metadata_1572774600339109.pkl':
+                print('in ', item)
+                print('meta')
+                print(remove_all_docstrings_from_metadata(meta))
+                print('metadata')
+                print(metadata)
+                print(meta['func'] == metadata['func'])
+                print(meta['args'] == metadata['args'])
+                print(meta['kwargs'] == metadata['kwargs'])
+                print(meta['code'] == metadata['code'])
+
         except AttributeError as a:
             print('%s has created some problem' % item)
             raise Exception(AttributeError.__name__, ": ", a.args[0])
