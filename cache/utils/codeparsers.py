@@ -1,10 +1,11 @@
-import dis
-import dill
-import types
-import itertools
-import inspect
-import importlib
 import builtins
+import dis
+import importlib
+import inspect
+import itertools
+import types
+
+import dill
 from stdlib_list import stdlib_list
 
 from .utils import get_system_packages
@@ -19,8 +20,13 @@ def code_tree(func, args, kwargs, exclusion_list, globals_list):
 
 def get_source(func, globals_list, remove_docs=True):
     sc = dill.source.getsource(globals_list[func])
-    assert (sc.startswith('def %s(' % func)
-            or sc.startswith('class %s(' % func))
+    try:
+        assert (sc.startswith('def %s(' % func)
+                or sc.startswith('class %s(' % func))
+    except AssertionError:
+        print('func: ', func)
+        print('sc: ', sc)
+        raise Exception(AssertionError)
     if remove_docs:
         return remove_docstring(sc)
     return sc
