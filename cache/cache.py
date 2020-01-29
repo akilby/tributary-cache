@@ -151,7 +151,8 @@ class Cache(object):
 
     def counter_pop(self, id_):
         counter = pickle_read(self.counter_path)
-        del counter[id_]
+        if id_ in counter.keys():
+            del counter[id_]
         pickle_dump(counter, self.counter_path)
 
     def configure_report(self):
