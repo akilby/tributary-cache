@@ -28,7 +28,7 @@ import time
 
 from .config import config_path
 from .config import configure as configure_
-from .config import configure_report, get_config, write_configs
+from .config import configure_report, get_config, load_config, write_configs
 from .disk.operations import cache_to_disk, purge_id_in_cache, search_cache
 from .initialize import directory, exclusion_list, globals_list
 from .metadata import determine_metadata, refactor_metadata_for_readability
@@ -174,6 +174,10 @@ class Cache(object):
             # read config from path
             self.config_file = configure
             self.globals_list = new_globals(configure)
+            directory, registry, exclusion_list = load_config(configure)
+            self.directory = directory
+            self.exclusion_list = exclusion_list
+            self.counter_path = os.path.join(self.directory, 'counter.pkl')
         elif isinstance(configure, dict):
             # pass arguments directly in a dict,
             # and otherwise rely on defaults
