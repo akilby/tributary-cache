@@ -20,6 +20,8 @@ def configure(stash=False, path=None):
     Can also direct to a temporary stash file, used for
     cache object-specific configuration
     """
+    if path:
+        stash = True
     config_file = config_path(stash=stash)
     dir_def, modules_def, exclusions_def = config_defaults(config_file)
     packages_def, modules_def = get_default_package_info(modules_def)
