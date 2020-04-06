@@ -1,12 +1,13 @@
 import csv
 import importlib
+import itertools
 import os
 import pkgutil
-import itertools
-import warnings
 import time
+import warnings
 from collections import OrderedDict
-from .utils.utils import single_item, listr
+
+from .utils.utils import listr, single_item
 
 
 def configure(stash=False):
@@ -236,7 +237,7 @@ def configure_report(config_file=None):
 
 
 def configure_package(name):
-    config_file = config_path(name='claims_data')
+    config_file = config_path(name)
     noisily_def, rerun_def = config_defaults_package(config_file)
     noisily = user_prompt('Cache noisily (y) or quietly (n)? ',
                           default=noisily_def,
