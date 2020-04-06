@@ -1,4 +1,5 @@
 import argparse
+
 from .config import configure, configure_package
 
 
@@ -23,10 +24,15 @@ class CommandLine(object):
         parser_configure.add_argument(
             '--package', required=False,
             help='can optionally specify a specific package to configure')
+        parser_configure.add_argument(
+            '--save', required=False,
+            help='can optionally specify a path to save to')
 
     def configure(self, args):
-        if not args.package:
+        if not args.package and not args.save:
             configure()
+        elif not args.package and args.save:
+            configure(path=args.save)
         else:
             configure_package(args.package)
 

@@ -3,6 +3,7 @@ import importlib
 import itertools
 import os
 import pkgutil
+import shutil
 import time
 import warnings
 from collections import OrderedDict
@@ -10,7 +11,7 @@ from collections import OrderedDict
 from .utils.utils import listr, single_item
 
 
-def configure(stash=False):
+def configure(stash=False, path=None):
     """
     Top level configuration script
     Reads in existing file, prompts for new configuration,
@@ -31,6 +32,9 @@ def configure(stash=False):
         listr(packages), ask_submodules, if_no, modules_def)
     write_configs(
         config_file, cache_directory, use_submodules, listr(exclusions))
+    if path:
+        shutil.move(config_file, path)
+        config_file = path
     print('Configuration file saved to %s' % config_file)
     if stash:
         return config_file
