@@ -237,7 +237,7 @@ def configure_report(config_file=None):
 
 
 def configure_package(name):
-    config_file = config_path(name)
+    config_file = config_path(name=name)
     noisily_def, rerun_def = config_defaults_package(config_file)
     noisily = user_prompt('Cache noisily (y) or quietly (n)? ',
                           default=noisily_def,
