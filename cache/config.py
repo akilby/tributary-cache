@@ -205,6 +205,8 @@ def write_configs(config_file, cache_directory, submodules, exclusions):
     """
     Writes configurations to file
     """
+    if not os.path.isdir(os.path.dirname(config_file)):
+        os.mkdir(os.path.dirname(config_file))
     with open(config_file, 'w') as f:
         writer = csv.writer(f, delimiter='\n')
         writer.writerow(['Cache Directory:'])
