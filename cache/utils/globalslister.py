@@ -1,4 +1,5 @@
 import importlib
+
 from ..config import load_config
 
 _old = globals().copy()
@@ -12,6 +13,7 @@ def new_globals(config_file):
             globals().pop(item)
 
     directory, registry, exclusion_list = load_config(config_file)
+    registry.append('cache.utils.universalmodules')
 
     [globals().update(vars(importlib.import_module(module)))
      for module in registry]
