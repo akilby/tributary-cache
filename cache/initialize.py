@@ -1,10 +1,12 @@
-import importlib
-from .config import get_config
-from .utils.utils import check_external, check_more_builtins
 import builtins
+import importlib
 import warnings
 
+from .config import get_config
+from .utils.utils import check_external, check_more_builtins
+
 directory, registry, exclusion_list = get_config()
+registry.append('cache.utils.universalmodules')
 
 
 def clean_funcs(funcs):
