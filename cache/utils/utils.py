@@ -1,13 +1,15 @@
+import importlib
+import os
 import pickle
 import subprocess
-import os
-import importlib
+
 from stdlib_list import stdlib_list
 
 
 def pickle_dump(thing, writefile):
     with open(writefile, 'wb') as picklefile:
-        pickle.dump(thing, picklefile)
+        # pickle.dump(thing, picklefile)
+        pickle.dump(thing, picklefile, protocol=4)
 
 
 def pickle_read(readfile):
