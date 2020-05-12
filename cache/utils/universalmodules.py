@@ -8,6 +8,6 @@ def hash_id():
 
 
 def hash_write_to_dta(df, tempdir, write_index=True):
-    filepath = os.path.join(tempdir, '%s.dta' % hash_id())
+    filepath = os.path.join(tempdir, 'dtafile_%s.dta' % hash_id())
     df.to_stata(df, filepath, write_index=write_index)
     return filepath
