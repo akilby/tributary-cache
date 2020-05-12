@@ -19,4 +19,5 @@ def new_globals(config_file):
      for module in registry]
 
     globals_list = globals()
+    print(globals_list.keys())
     return globals_list
