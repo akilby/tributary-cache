@@ -111,7 +111,7 @@ class Cache(object):
 
     def load_id(self, id_):
         try:
-            printn('* Cache found; loading from ID %s' % id_, self.noisily)
+            printn('* Cache found - loading from ID %s:' % id_, self.noisily)
             output = pickle_read(os.path.join(self.directory,
                                               'output_%s.pkl' % id_))
             printn('* Cache successfully loaded', self.noisily)
