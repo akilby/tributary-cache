@@ -44,6 +44,7 @@ def complex_hasher(obj):
                 out = hash_pandas_object(
                     obj.assign(**{col: obj[col].dt.to_timestamp()
                                   for col in pds.columns})).sum()
+            hasher_count += 1
         elif isinstance(obj, pd.Series):
             pds = pd.DataFrame(obj).select_dtypes(pd.PeriodDtype)
             if pds.empty:
