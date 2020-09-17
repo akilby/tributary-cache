@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import find_packages, setup
 
 setup(name='cache',
       version='0.1',
@@ -7,7 +7,7 @@ setup(name='cache',
       author='Angela E. Kilby',
       author_email='a.kilby@northeastern.edu',
       license='MIT',
-      packages=['cache'],
+      packages=find_packages('src'),
       install_requires=['stdlib_list', 'dill'],
       zip_safe=False,
       entry_points={
