@@ -1,6 +1,6 @@
 import argparse
 
-from .config import configure, configure_package
+from cache.config import configure, configure_package
 
 
 class CommandLine(object):

@@ -26,14 +26,17 @@ seem to stick
 import os
 import time
 
-from .config import config_path
-from .config import configure as configure_
-from .config import configure_report, get_config, load_config, write_configs
-from .disk.operations import cache_to_disk, purge_id_in_cache, search_cache
-from .initialize import directory, exclusion_list, globals_list
-from .metadata import determine_metadata, refactor_metadata_for_readability
-from .utils.globalslister import new_globals
-from .utils.utils import pickle_dump, pickle_read, printn, terminal_width
+from cache.config import config_path
+from cache.config import configure as configure_
+from cache.config import (configure_report, get_config, load_config,
+                          write_configs)
+from cache.disk.operations import (cache_to_disk, purge_id_in_cache,
+                                   search_cache)
+from cache.initialize import directory, exclusion_list, globals_list
+from cache.metadata import (determine_metadata,
+                            refactor_metadata_for_readability)
+from cache.utils.globalslister import new_globals
+from cache.utils.utils import pickle_dump, pickle_read, printn, terminal_width
 
 
 class Cache(object):

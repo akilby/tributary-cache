@@ -6,9 +6,8 @@ import itertools
 import types
 
 import dill
+from cache.utils import get_system_packages
 from stdlib_list import stdlib_list
-
-from .utils import get_system_packages
 
 
 def code_tree(func, args, kwargs, exclusion_list, globals_list):
