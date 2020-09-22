@@ -20,7 +20,7 @@ Note that the registered function `myfunc` also remains a regular function and d
 
 It's still kludgy, but very handy.
 
-Warning: this package does its best to search for all called child code but it definitely does not yet work perfectly. For example, some function called inside a class don't seem to be recognized.
+Warning: this package does its best to search for all functions called by the memoized function, but it definitely does not yet work perfectly. For example, some function called inside a class don't seem to be recognized.
 
 
 
