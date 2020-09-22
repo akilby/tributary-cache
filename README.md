@@ -4,7 +4,7 @@
 This is a complex file-based memoization package. It has two distinguishing features:
 
 1. Memoization is written to disk, and is not in-memory, so memoization is persistent across sessions.
-2. Memoization accounts for changes in the function's code, as well as the code of all called functions.
+2. Memoization accounts for changes in the function's code, as well as the code of other functions called from the memoized function.
 
 
 It is transparent and portable, in that metadata and the outputs of the function are pickled in a readable format. It also has various optimizations to assist in work with large file sizes, like hashing pandas data frames.
