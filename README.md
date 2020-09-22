@@ -9,7 +9,7 @@ This is a complex file-based memoization package. It has two distinguishing feat
 
 It is transparent and portable, in that metadata and the outputs of the function are pickled in a readable format. It also has various optimizations to assist in work with large file sizes, like hashing pandas data frames.
 
-If you instantiate a Cache object, you can call any registered function as a method of the class:
+If you instantiate a Cache object, you can call any registered function as a method of the cache instance:
 
 ```
 c = cache.Cache()
