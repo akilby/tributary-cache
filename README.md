@@ -1,4 +1,4 @@
-# cache -- Complex file-based memoization and caching
+# cache - complex file-based memoization and caching
 
 
 This is a complex file-based memoization package. Its key distinguishing feature compared to standard memoization is that it checks for changes in the memoized function's code, and the code of all child functions, and all memoization persists across sessions. It is also transparent and portable, in that metadata and the outputs of the function are pickled in a readable format. It has various optimizations to assist in work with large file sizes, like hashing pandas data frames.
