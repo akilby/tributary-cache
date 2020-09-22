@@ -1,7 +1,13 @@
 # cache - complex file-based memoization and caching
 
 
-This is a complex file-based memoization package. Its key distinguishing feature compared to standard memoization is that it checks for changes in the memoized function's code, and the code of all child functions, and all memoization persists across sessions. It is also transparent and portable, in that metadata and the outputs of the function are pickled in a readable format. It has various optimizations to assist in work with large file sizes, like hashing pandas data frames.
+This is a complex file-based memoization package. It has two distinguishing features:
+
+1. Memoization is written to disk, and is not in-memory, so memoization is persistent across sessions.
+2. Memoization accounts for changes in the function's code, as well as the code of all called functions.
+
+
+It is transparent and portable, in that metadata and the outputs of the function are pickled in a readable format. It also has various optimizations to assist in work with large file sizes, like hashing pandas data frames.
 
 If you instantiate a Cache object, you can call any registered function as a method of the class:
 
