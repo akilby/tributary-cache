@@ -14,9 +14,9 @@ If you instantiate a Cache object, you can call any registered function as a met
 ```
 c = cache.Cache()
 
-out = c.myfunc(args)
+out = c.foo(args)
 ```
-Note that the registered function `myfunc` also remains a regular function and does not *need* to be memoized.
+Note that the registered function `foo` also remains a regular function and does not *need* to be memoized.
 
 It's still kludgy, but very handy.
 
