@@ -126,8 +126,8 @@ class Cache(object):
             id_, output = None, None
         except AttributeError:
             try:
-                printn('* Cache found - loading from ID %s:' % id_,
-                       self.noisily)
+                printn('Using alternate pandas loader for'
+                       ' backwards compatibility')
                 output = pd.read_pickle(os.path.join(self.directory,
                                                      'output_%s.pkl' % id_))
                 printn('* Cache successfully loaded', self.noisily)
