@@ -126,7 +126,7 @@ class Cache(object):
             id_, output = None, None
         except AttributeError:
             try:
-                printn('Using alternate pandas loader for'
+                printn('Using alternate pandas pickle loader for'
                        ' backwards compatibility')
                 output = pd.read_pickle(os.path.join(self.directory,
                                                      'output_%s.pkl' % id_))
