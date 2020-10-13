@@ -22,10 +22,11 @@ definitely does not work perfectly
 For example most things called inside a class like RunScript don't
 seem to stick
 """
-
 import os
 import time
+from pickle import UnpicklingError
 
+import pandas as pd
 from cache.config import config_path
 from cache.config import configure as configure_
 from cache.config import (configure_report, get_config, load_config,
@@ -123,6 +124,16 @@ class Cache(object):
             print('%s: Ran out of input' % EOFError.__name__)
             self.purge_id(self, id_)
             id_, output = None, None
+        except AttributeError:
+            try:
+                printn('* Cache found - loading from ID %s:' % id_,
+                       self.noisily)
+                output = pd.read_pickle(os.path.join(self.directory,
+                                                     'output_%s.pkl' % id_))
+                printn('* Cache successfully loaded', self.noisily)
+                return id_, output
+            except UnpicklingError:
+                raise Exception(UnpicklingError)
         except FileNotFoundError:
             id_, output = None, None
         return id_, output
