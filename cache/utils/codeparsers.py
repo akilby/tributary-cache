@@ -76,7 +76,6 @@ def get_all_children(func, args, kwargs, exclusion_list, globals_list):
 
 def get_cached_children(func, globals_list,
                         cache_string_list=['cache.Cache(']):
-    # print(func)
     sc = dill.source.getsource(globals_list[func])
     try:
         assert (sc.startswith('def %s(' % func)
