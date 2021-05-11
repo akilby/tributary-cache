@@ -13,7 +13,7 @@ from undecorated import undecorated
 
 # import warnings
 
-old_version = True
+old_version = False
 
 
 def code_tree(func, args, kwargs, exclusion_list, globals_list):
