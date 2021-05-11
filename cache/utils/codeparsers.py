@@ -137,7 +137,6 @@ def func_calls(fct, globals_list, recursive=True):
         #      and globals_list[x].__name__
         #      not in sys_packages]
 
-        n = [x for x in n if globals_list[x].__name__ not in sys_packages]
         # update to allow full recursion
         n_get = [x for x in n if x not in globals_list.keys()]
         if n_get:
@@ -146,6 +145,7 @@ def func_calls(fct, globals_list, recursive=True):
             globals_list.update(all_funcs)
 
         n = [x for x in n if x in globals_list.keys()]
+        n = [x for x in n if globals_list[x].__name__ not in sys_packages]
 
         new_list = new_list + n
         old_list = old_list[1:] + functionize(n, globals_list)
