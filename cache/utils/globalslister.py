@@ -20,8 +20,7 @@ def new_globals(config_file):
     for module in registry:
         allfuncs = vars(importlib.import_module(module))
         allfuncs = {funcname: func for funcname, func in allfuncs.items()
-                    if not funcname.startswith('__') and
-                    funcname not in ["cache_decorator", "wraps"]}
+                    if funcname not in ["cache_decorator", "wraps"]}
         for funcname, func in allfuncs.items():
             if inspect.getsource(func).startswith('@cache_decorator'):
                 allfuncs[funcname] = undecorated(allfuncs[funcname])
