@@ -14,6 +14,7 @@ def cache_decorator(function):
         c = cache.Cache(configure={'directory': path,
                                    'registry': [module_to_import],
                                    'exclusion_list': []})
+        print(c.globals_list.keys())
         func = getattr(c, function.__code__.co_name)(*args, **kwargs)
         return func
 
