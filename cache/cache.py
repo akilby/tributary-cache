@@ -199,18 +199,24 @@ class Cache(object):
             self.exclusion_list = exclusion_list
             self.counter_path = os.path.join(self.directory, 'counter.pkl')
         elif isinstance(configure, dict):
+            print('p1')
             # pass arguments directly in a dict,
             # and otherwise rely on defaults
             assert set(configure.keys()).issubset(
                 set(['directory', 'registry', 'exclusion_list']))
             directory, registry, exclusions = get_config()
+            print('p2')
             if 'directory' in configure.keys():
+                print('p3')
                 directory = configure['directory']
             if 'registry' in configure.keys():
                 registry = configure['registry']
+                print('p4')
             if 'directory' in configure.keys():
                 exclusions = configure['exclusion_list']
+                print('p5')
             self.config_file = config_path(stash=True)
+            print(self.config_file)
             write_configs(self.config_file, directory, registry, exclusions)
             self.globals_list = new_globals(self.config_file)
         else:
