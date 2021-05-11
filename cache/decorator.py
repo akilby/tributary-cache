@@ -2,7 +2,8 @@ import inspect
 from functools import wraps
 
 # THIS IS WRONG, BUT TEMPORARY - need to implement some sort of
-# module-based instruction
+# module-based instruction... something like joblib. Also rename
+# the decorator
 path = '/scratch/akilby/Output/Cache/temp'
 exclusion_list = []
 
