@@ -8,7 +8,7 @@ path = '/scratch/akilby/Output/Cache/temp'
 exclusion_list = []
 
 
-def cache_decorator(function, path):
+def cache_decorator(function):
     @wraps(function)
     def wrapper(*args, **kwargs):
         from cache import cache
