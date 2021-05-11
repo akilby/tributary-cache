@@ -24,8 +24,12 @@ def new_globals(config_file):
         for funcname, func in allfuncs.items():
             if not funcname.startswith('__'):
                 print(module, funcname)
-                if inspect.getsource(func).startswith('@cache_decorator'):
-                    allfuncs[funcname] = undecorated(allfuncs[funcname])
+                try:
+                    sc = inspect.getsource(func)
+                    if sc.startswith('@cache_decorator'):
+                        allfuncs[funcname] = undecorated(allfuncs[funcname])
+                except TypeError:
+                    pass
         globals().update(allfuncs)
 
     globals_list = globals()
