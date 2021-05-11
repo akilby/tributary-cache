@@ -4,6 +4,7 @@ import importlib
 import inspect
 import itertools
 import types
+import warnings
 
 import dill
 from cache.utils.utils import get_system_packages
@@ -70,8 +71,15 @@ def get_all_children(func, args, kwargs, exclusion_list, globals_list):
 def get_cached_children(func, globals_list,
                         cache_string_list=['cache.Cache(']):
     sc = dill.source.getsource(globals_list[func])
-    assert (sc.startswith('def %s(' % func)
-            or sc.startswith('class %s(object):' % func))
+    try:
+        assert (sc.startswith('def %s(' % func)
+                or sc.startswith('class %s(object):' % func))
+    except AssertionError:
+        try:
+            assert sc.startswith('@cache_decorator')
+            warnings.warn('Trying out a cache decorator: still in development')
+        except AssertionError:
+            raise AssertionError('Unknown code type')
     for cache_string in cache_string_list:
         if cache_string in sc:
             cacher_name = [x for x in sc.splitlines() if
