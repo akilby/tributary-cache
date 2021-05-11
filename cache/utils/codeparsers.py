@@ -9,6 +9,7 @@ import warnings
 import dill
 from cache.utils.utils import get_system_packages
 from stdlib_list import stdlib_list
+from undecorated import undecorated
 
 
 def code_tree(func, args, kwargs, exclusion_list, globals_list):
@@ -24,9 +25,14 @@ def get_source(func, globals_list, remove_docs=True):
         assert (sc.startswith('def %s(' % func)
                 or sc.startswith('class %s(' % func))
     except AssertionError:
-        print('func: ', func)
-        print('sc: ', sc)
-        raise Exception(AssertionError)
+        try:
+            sc = dill.source.getsource(undecorated(globals_list[func]))
+            assert sc.startswith('@cache_decorator\ndef %s(' % func)
+            warnings.warn('Trying out a cache decorator: still in development')
+        except AssertionError:
+            print('func: ', func)
+            print('sc: ', sc)
+            raise Exception(AssertionError)
     if remove_docs:
         return remove_docstring(sc)
     return sc
@@ -77,9 +83,10 @@ def get_cached_children(func, globals_list,
                 or sc.startswith('class %s(object):' % func))
     except AssertionError:
         try:
-            print(sc)
-            assert sc.startswith('@cache_decorator')
+            sc = dill.source.getsource(undecorated(globals_list[func]))
+            assert sc.startswith('@cache_decorator\ndef %s(' % func)
             warnings.warn('Trying out a cache decorator: still in development')
+
         except AssertionError:
             raise AssertionError('Unknown code type')
     for cache_string in cache_string_list:
