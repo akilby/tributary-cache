@@ -54,7 +54,6 @@ class Cache(object):
         self.directory = directory
         self.exclusion_list = exclusion_list
         self.counter_path = os.path.join(self.directory, 'counter.pkl')
-        print('herrer1')
         self.handle_configure(configure)
         self.handle_counter()
 
@@ -152,11 +151,7 @@ class Cache(object):
         return id_, output
 
     def handle_counter(self):
-        print('herrer2')
-        print(self.counter_path)
-        print(os.path.isfile(self.counter_path))
         if not os.path.isfile(self.counter_path):
-            print('herrer3')
             pickle_dump({}, self.counter_path)
 
     def purge_id(self, id_):
