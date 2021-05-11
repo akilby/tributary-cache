@@ -206,15 +206,15 @@ class Cache(object):
             directory, registry, exclusions = get_config()
             if 'directory' in configure.keys():
                 directory = configure['directory']
+                self.directory = directory
+                self.counter_path = os.path.join(self.directory, 'counter.pkl')
             if 'registry' in configure.keys():
                 registry = configure['registry']
-            if 'directory' in configure.keys():
+            if 'exclusion_list' in configure.keys():
                 exclusions = configure['exclusion_list']
+                self.exclusion_list = exclusions
             self.config_file = config_path(stash=True)
             write_configs(self.config_file, directory, registry, exclusions)
-            self.directory = directory
-            self.exclusion_list = exclusion_list
-            self.counter_path = os.path.join(self.directory, 'counter.pkl')
             self.globals_list = new_globals(self.config_file)
         else:
             raise Exception('Invalid configure')
