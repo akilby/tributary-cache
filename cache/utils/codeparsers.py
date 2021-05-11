@@ -28,7 +28,8 @@ def get_source(func, globals_list, remove_docs=True):
         try:
             sc = dill.source.getsource(undecorated(globals_list[func]))
             assert sc.startswith('@cache_decorator\ndef %s(' % func)
-            warnings.warn('Trying out a cache decorator: still in development')
+            # warnings.warn(
+            # 'Trying out a cache decorator: still in development')
         except AssertionError:
             print('func: ', func)
             print('sc: ', sc)
@@ -84,7 +85,8 @@ def get_cached_children(func, globals_list,
         try:
             sc = dill.source.getsource(undecorated(globals_list[func]))
             assert sc.startswith('@cache_decorator\ndef %s(' % func)
-            warnings.warn('Trying out a cache decorator: still in development')
+            # warnings.warn(
+            # 'Trying out a cache decorator: still in development')
 
         except AssertionError:
             raise AssertionError('Unknown code type')

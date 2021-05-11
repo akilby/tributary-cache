@@ -13,8 +13,8 @@ def cache_decorator(function):
         module_to_import = inspect.getmodule(function).__name__
         c = cache.Cache(configure={'directory': path,
                                    'registry': [module_to_import],
-                                   'exclusion_list': []})
-        print(c.globals_list.keys())
+                                   'exclusion_list': []},
+                        noisily=True)
         func = getattr(c, function.__code__.co_name)(*args, **kwargs)
         return func
 
