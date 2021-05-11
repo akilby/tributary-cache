@@ -76,6 +76,7 @@ def get_cached_children(func, globals_list,
                 or sc.startswith('class %s(object):' % func))
     except AssertionError:
         try:
+            print(sc)
             assert sc.startswith('@cache_decorator')
             warnings.warn('Trying out a cache decorator: still in development')
         except AssertionError:
