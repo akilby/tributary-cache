@@ -49,11 +49,12 @@ class Cache(object):
                  configure=False,
                  rerun=False):
 
+        self.noisily = noisily
+        self.rerun = rerun
         self.directory = directory
         self.exclusion_list = exclusion_list
         self.counter_path = os.path.join(self.directory, 'counter.pkl')
-        self.noisily = noisily
-        self.rerun = rerun
+        self.handle_counter()
         self.handle_configure(configure)
 
     def __getattr__(self, attr):
@@ -148,6 +149,10 @@ class Cache(object):
                                output, move_file_in_position)
         self.counter_update(id_)
         return id_, output
+
+    def handle_counter(self):
+        if not os.path.isfile(self.counter_path):
+            pickle_dump({}, self.counter_path)
 
     def purge_id(self, id_):
         printn('* Cache purged with ID %s' % id_, self.noisily)
