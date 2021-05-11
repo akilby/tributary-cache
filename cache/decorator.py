@@ -16,6 +16,7 @@ def cache_decorator(function):
         print(module_to_import)
 
         module_to_import = function.__module__
+        print(module_to_import)
 
         from cache import cache
         c = cache.Cache(configure={'directory': path,
