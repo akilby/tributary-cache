@@ -22,8 +22,9 @@ def new_globals(config_file):
         allfuncs = {funcname: func for funcname, func in allfuncs.items()
                     if funcname not in ["cache_decorator", "wraps"]}
         for funcname, func in allfuncs.items():
-            if inspect.getsource(func).startswith('@cache_decorator'):
-                allfuncs[funcname] = undecorated(allfuncs[funcname])
+            if not funcname.startswith('__'):
+                if inspect.getsource(func).startswith('@cache_decorator'):
+                    allfuncs[funcname] = undecorated(allfuncs[funcname])
         globals().update(allfuncs)
 
     globals_list = globals()
