@@ -18,19 +18,24 @@ def new_globals(config_file):
     registry.append('cache.utils.universalmodules')
 
     for module in registry:
-        allfuncs = vars(importlib.import_module(module))
-        allfuncs = {funcname: func for funcname, func in allfuncs.items()
-                    if funcname not in ["cache_decorator", "wraps"]}
-        for funcname, func in allfuncs.items():
-            if not funcname.startswith('__'):
-                try:
-                    sc = inspect.getsource(func)
-                    if sc.startswith('@cache_decorator'):
-                        allfuncs[funcname] = undecorated(allfuncs[funcname])
-                except TypeError:
-                    pass
+        allfuncs = retrieve_all_funcs(module)
         globals().update(allfuncs)
 
     globals_list = globals()
     # print(globals_list.keys())
     return globals_list
+
+
+def retrieve_all_funcs(module):
+    allfuncs = vars(importlib.import_module(module))
+    allfuncs = {funcname: func for funcname, func in allfuncs.items()
+                if funcname not in ["cache_decorator", "wraps"]}
+    for funcname, func in allfuncs.items():
+        if not funcname.startswith('__'):
+            try:
+                sc = inspect.getsource(func)
+                if sc.startswith('@cache_decorator'):
+                    allfuncs[funcname] = undecorated(allfuncs[funcname])
+            except TypeError:
+                pass
+    return allfuncs

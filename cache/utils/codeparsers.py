@@ -4,12 +4,13 @@ import importlib
 import inspect
 import itertools
 import types
-import warnings
 
 import dill
 from cache.utils.utils import get_system_packages
 from stdlib_list import stdlib_list
 from undecorated import undecorated
+
+# import warnings
 
 
 def code_tree(func, args, kwargs, exclusion_list, globals_list):
