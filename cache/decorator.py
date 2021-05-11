@@ -11,9 +11,13 @@ exclusion_list = []
 def cache_decorator(function):
     @wraps(function)
     def wrapper(*args, **kwargs):
-        from cache import cache
 
         module_to_import = inspect.getmodule(function).__name__
+        print(module_to_import)
+
+        module_to_import = function.__module__
+
+        from cache import cache
         c = cache.Cache(configure={'directory': path,
                                    'registry': [module_to_import],
                                    'exclusion_list': []},
