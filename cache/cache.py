@@ -55,8 +55,8 @@ class Cache(object):
         self.exclusion_list = exclusion_list
         self.counter_path = os.path.join(self.directory, 'counter.pkl')
         print('herrer1')
-        self.handle_counter()
         self.handle_configure(configure)
+        self.handle_counter()
 
     def __getattr__(self, attr):
         return self.__get_global_handler(attr)
