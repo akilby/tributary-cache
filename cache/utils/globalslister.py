@@ -23,7 +23,6 @@ def new_globals(config_file):
                     if funcname not in ["cache_decorator", "wraps"]}
         for funcname, func in allfuncs.items():
             if not funcname.startswith('__'):
-                print(module, funcname)
                 try:
                     sc = inspect.getsource(func)
                     if sc.startswith('@cache_decorator'):
