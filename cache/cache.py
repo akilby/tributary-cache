@@ -153,6 +153,8 @@ class Cache(object):
 
     def handle_counter(self):
         print('herrer2')
+        print(self.counter_path)
+        print(os.path.isfile(self.counter_path))
         if not os.path.isfile(self.counter_path):
             print('herrer3')
             pickle_dump({}, self.counter_path)
