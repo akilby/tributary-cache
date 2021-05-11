@@ -4,7 +4,7 @@ from functools import wraps
 # THIS IS WRONG, BUT TEMPORARY - need to implement some sort of
 # module-based instruction... something like joblib. Also rename
 # the decorator and have it take arguments
-# path = '/scratch/akilby/Output/Cache/temp'
+path = '/scratch/akilby/Output/Cache/temp'
 exclusion_list = []
 
 
