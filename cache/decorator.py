@@ -18,9 +18,6 @@ def cache_decorator(function):
                                    'registry': [module_to_import],
                                    'exclusion_list': []},
                         noisily=True)
-        print(c.directory)
-        print(c.globals_list.keys())
-        func = getattr(c, function.__code__.co_name)(*args, **kwargs)
-        return func
+        return getattr(c, function.__code__.co_name)(*args, **kwargs)
 
     return wrapper
