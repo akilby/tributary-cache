@@ -1,6 +1,8 @@
 import importlib
+import inspect
 
 from cache.config import load_config
+from undecorated import undecorated
 
 _old = globals().copy()
 
@@ -15,8 +17,15 @@ def new_globals(config_file):
     directory, registry, exclusion_list = load_config(config_file)
     registry.append('cache.utils.universalmodules')
 
-    [globals().update(vars(importlib.import_module(module)))
-     for module in registry]
+    for module in registry:
+        allfuncs = vars(importlib.import_module(module))
+        allfuncs = {funcname: func for funcname, func in allfuncs.items()
+                    if not funcname.startswith('__') and
+                    funcname not in ["cache_decorator", "wraps"]}
+        for funcname, func in allfuncs.items():
+            if inspect.getsource(func).startswith('@cache_decorator'):
+                allfuncs[funcname] = undecorated(allfuncs[funcname])
+        globals().update(allfuncs)
 
     globals_list = globals()
     # print(globals_list.keys())
