@@ -1,4 +1,3 @@
-import inspect
 from functools import wraps
 
 # THIS IS WRONG, BUT TEMPORARY - need to implement some sort of
@@ -9,11 +8,9 @@ exclusion_list = []
 
 
 def cache_decorator(function):
+
     @wraps(function)
     def wrapper(*args, **kwargs):
-
-        module_to_import = inspect.getmodule(function).__name__
-        print(module_to_import)
 
         module_to_import = function.__module__
         print(module_to_import)
