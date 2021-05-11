@@ -11,7 +11,8 @@ def new_globals(config_file):
 
     current_globals = globals().copy()
     for item in list(current_globals.keys()):
-        if item not in list(_old.keys()) + ['_old', 'new_globals']:
+        if item not in list(_old.keys()) + ['_old', 'new_globals',
+                                            'retrieve_all_funcs']:
             globals().pop(item)
 
     directory, registry, exclusion_list = load_config(config_file)
