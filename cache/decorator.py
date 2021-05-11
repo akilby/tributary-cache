@@ -3,7 +3,7 @@ from functools import wraps
 
 # THIS IS WRONG, BUT TEMPORARY - need to implement some sort of
 # module-based instruction... something like joblib. Also rename
-# the decorator
+# the decorator and have it take arguments
 path = '/scratch/akilby/Output/Cache/temp'
 exclusion_list = []
 
@@ -18,6 +18,9 @@ def cache_decorator(function):
                                    'registry': [module_to_import],
                                    'exclusion_list': []},
                         noisily=True)
-        return getattr(c, function.__code__.co_name)(*args, **kwargs)
+        print(c.directory)
+        print(c.globals_list.keys())
+        func = getattr(c, function.__code__.co_name)(*args, **kwargs)
+        return func
 
     return wrapper
