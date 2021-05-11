@@ -13,6 +13,8 @@ from undecorated import undecorated
 
 # import warnings
 
+old_version = True
+
 
 def code_tree(func, args, kwargs, exclusion_list, globals_list):
     child_funcs = get_all_children(func, args, kwargs,
@@ -132,20 +134,21 @@ def func_calls(fct, globals_list, recursive=True):
     while old_list != []:
         mod = old_list[0].__module__
         n = new_func_calls(old_list[0], big_old_list)
-        # This is where a non-registered function gets dropped
-        # n = [x for x in n if x in globals_list.keys()
-        #      and globals_list[x].__name__
-        #      not in sys_packages]
+        if old_version:
+            # This is where a non-registered function gets dropped
+            n = [x for x in n if x in globals_list.keys()
+                 and globals_list[x].__name__
+                 not in sys_packages]
+        else:
+            # update to allow full recursion
+            n_get = [x for x in n if x not in globals_list.keys()]
+            if n_get:
+                print('adding to globals_list by recursion')
+                all_funcs = retrieve_all_funcs(mod)
+                globals_list.update(all_funcs)
 
-        # update to allow full recursion
-        n_get = [x for x in n if x not in globals_list.keys()]
-        if n_get:
-            print('adding to globals_list by recursion')
-            all_funcs = retrieve_all_funcs(mod)
-            globals_list.update(all_funcs)
-
-        n = [x for x in n if x in globals_list.keys()]
-        n = [x for x in n if globals_list[x].__name__ not in sys_packages]
+            n = [x for x in n if x in globals_list.keys()]
+            n = [x for x in n if globals_list[x].__name__ not in sys_packages]
 
         new_list = new_list + n
         old_list = old_list[1:] + functionize(n, globals_list)
