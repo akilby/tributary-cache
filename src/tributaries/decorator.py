@@ -1,6 +1,7 @@
 import functools
 import os
 import tempfile
+import warnings
 
 
 class Cacher(object):
@@ -18,6 +19,10 @@ class Cacher(object):
 
         if not directory:
             directory = os.path.join(tempfile.gettempdir(), '_cache')
+            warnings.warn(
+                'You are saving caches to your tmp directory, %s. '
+                'This may fill quickly. Set directory at the package level, '
+                'or at each instantiation of the Cacher class' % directory)
 
         self.directory = directory
         self.exclusion_list = []
