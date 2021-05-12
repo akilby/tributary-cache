@@ -4,6 +4,7 @@ import tempfile
 
 
 class Memoizer(object):
+
     def __init__(self,
                  directory=os.path.join(tempfile.gettempdir(), '_cache'),
                  verbose=0):

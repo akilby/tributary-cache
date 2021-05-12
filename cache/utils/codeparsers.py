@@ -29,9 +29,9 @@ def get_source(func, globals_list, remove_docs=True):
                 or sc.startswith('class %s(' % func))
     except AssertionError:
         try:
-            sc = dill.source.getsource(undecorated(globals_list[func]))
-            assert sc.startswith('@cache_decorator\ndef %s(' % func)
-            # assert globals_list[func].is_cacher_registered
+            # sc = dill.source.getsource(undecorated(globals_list[func]))
+            # assert sc.startswith('@cache_decorator\ndef %s(' % func)
+            assert globals_list[func].is_cacher_registered
             # warnings.warn(
             # 'Trying out a cache decorator: still in development')
         except AssertionError:
@@ -93,9 +93,9 @@ def get_cached_children(func, globals_list,
                 or sc.startswith('class %s(object):' % func))
     except AssertionError:
         try:
-            sc = dill.source.getsource(undecorated(globals_list[func]))
-            assert sc.startswith('@cache_decorator\ndef %s(' % func)
-            # assert globals_list[func].is_cacher_registered
+            # sc = dill.source.getsource(undecorated(globals_list[func]))
+            # assert sc.startswith('@cache_decorator\ndef %s(' % func)
+            assert globals_list[func].is_cacher_registered
             # should take out the first two lines here and above
             # warnings.warn(
             # 'Trying out a cache decorator: still in development')
