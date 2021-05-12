@@ -31,8 +31,9 @@ class Memoizer(object):
         @functools.wraps(function)
         def wrapper(*args, **kwargs):
 
-            if '_nocache' in kwargs:
+            if '_block_cache' in kwargs:
                 print('yes')
+                return function(*args, **kwargs)
 
             module_to_import = function.__module__
 
