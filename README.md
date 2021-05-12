@@ -17,9 +17,17 @@ from tributaries import Cacher
 cacher = Cacher(directory='/scratch/akilby/Output/Cache/temp', verbose=0)
 
 @cacher.register
-def foo():
-  pass
+def clean_my_data(df_raw):
+  df_intermed1 = time_consuming_cleaning_process1(df_raw)
+  df_intermed2 = time_consuming_cleaning_process2(df_intermed1)
+  df_final = time_consuming_cleaning_process3(df_intermed2)
+  return df_final
 ```
+If clean_my_data is registered, the first run will be time-consuming, but subsequent runs will load nearly-instantly, provided the code of the function and dependencies has not changed.
+
+Dependency functions such time_consuming_cleaning_process1 can be themselves registered, to save time while working on intermediate cleaning steps.
+
+
 
 ## Command Line Setup - Deprecated version of package ##
 
