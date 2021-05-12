@@ -41,5 +41,4 @@ class Memoizer(object):
                             noisily=self.noisily)
             return getattr(c, function.__code__.co_name)(*args, **kwargs)
 
-        # wrapper.is_cacher_registered = True
         return wrapper

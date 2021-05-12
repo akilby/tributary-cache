@@ -36,5 +36,4 @@ def retrieve_all_funcs(module):
         if not funcname.startswith('__'):
             if hasattr(func, "is_cacher_registered"):
                 allfuncs[funcname] = undecorated(allfuncs[funcname])
-                # allfuncs[funcname].is_cacher_registered = True
     return allfuncs
