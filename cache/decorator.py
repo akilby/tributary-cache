@@ -33,7 +33,7 @@ class Memoizer(object):
 
             if '_block_cache' in kwargs:
                 print('yes')
-                kwargs.pop('block_cache')
+                kwargs.pop('_block_cache')
                 return function(*args, **kwargs)
 
             module_to_import = function.__module__
