@@ -5,3 +5,7 @@ If function foo.bar calls blah.bar, name conflicts can maybe be a problem (?) ne
 Could use functions themselves as the dictionary key in globals_list, to prevent any conflicts in session
 
 And prepend module names in the cacher dictionary
+
+Perhaps set a way to universally disable the cache decorator. so you install the package then disable it
+
+Fix this: Warning: this package does its best to search for all functions called by the memoized function, but it does not yet work perfectly. For example, some functions called inside a class don't seem to be recognized.

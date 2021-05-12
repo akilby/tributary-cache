@@ -1,24 +1,25 @@
 #  tributary-cache - complex file-based memoization and caching
 
-
 This is a complex file-based memoization package. It has two distinguishing features:
 
 1. Memoization is written to disk, and is not in-memory, so memoization is persistent across sessions.
-2. Memoization accounts for changes in the function's code, as well as the code of other functions called from the memoized function.
-
+2. Memoization accounts for changes in the function's code, as well as the code of other functions (dependencies) called from the memoized function.
 
 It is transparent and portable, in that metadata and the outputs of the function are pickled in a readable format. It also has various optimizations to assist in work with large file sizes, like hashing pandas data frames.
 
-It's still kludgy, but very handy, especially for data science workflows.
+It's still kludgy, but very handy, especially for data science workflows. If you have scripts that process data, you can wrap them in a function, register the function, and the cacher will save to disk and retrieve it whenever you need it, eliminating the need for many poorly-named saved files produced by intermediate steps of data cleaning or processing.
 
-Warning: this package does its best to search for all functions called by the memoized function, but it definitely does not yet work perfectly. For example, some functions called inside a class don't seem to be recognized.
+Warning: this package does its best to search for all functions called by the memoized function, but it does not yet work perfectly. For example, some functions called inside a class don't seem to be recognized.
 
 
-from tributarycache import Cacher
-
+```
 from tributaries import Cacher
+cacher = Cacher(directory='/scratch/akilby/Output/Cache/temp', verbose=0)
 
-
+@cacher.register
+def foo():
+	pass
+```
 
 ## Command Line Setup - Deprecated version of package ##
 
