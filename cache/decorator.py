@@ -31,9 +31,9 @@ class Memoizer(object):
         @functools.wraps(function)
         def wrapper(*args, **kwargs):
 
-            if '_block_cache' in kwargs:
-                kwargs.pop('_block_cache')
-                return function(*args, **kwargs)
+            # if '_block_cache' in kwargs:
+            #     kwargs.pop('_block_cache')
+            #     return function(*args, **kwargs)
 
             module_to_import = function.__module__
 
@@ -44,5 +44,7 @@ class Memoizer(object):
                             noisily=self.noisily)
 
             return getattr(c, function.__code__.co_name)(*args, **kwargs)
+
+        wrapper.bare_func = function
 
         return wrapper
