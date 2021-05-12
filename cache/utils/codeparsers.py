@@ -118,7 +118,7 @@ def get_cached_children(func, globals_list,
     return other_child_functions
 
 
-def func_calls(fct, globals_list, recursive=True):
+def func_calls(fct, globals_list, old_version=False):
     sys_packages = get_system_packages()
     new_list = get_function_calls(fct)
     try:
