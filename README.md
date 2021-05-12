@@ -14,7 +14,7 @@ Warning: this package does its best to search for all functions called by the me
 
 ```
 from tributaries import Cacher
-cacher = Cacher(directory='/scratch/akilby/Output/Cache/temp', verbose=0)
+cacher = Cacher(directory='/path/to/cache/directory', verbose=0)
 
 @cacher.register
 def clean_my_data(df_raw):
