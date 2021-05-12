@@ -31,14 +31,17 @@ class Memoizer(object):
         @functools.wraps(function)
         def wrapper(*args, **kwargs):
 
+            if '_nocache' in kwargs:
+                print('yes')
+
             module_to_import = function.__module__
 
             from cache import cache
-
             c = cache.Cache(configure={'directory': self.directory,
                                        'registry': [module_to_import],
                                        'exclusion_list': self.exclusion_list},
                             noisily=self.noisily)
+
             return getattr(c, function.__code__.co_name)(*args, **kwargs)
 
         return wrapper
