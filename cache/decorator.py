@@ -3,7 +3,7 @@ import os
 import tempfile
 
 
-class Memoizer(object):
+class Memorizer(object):
 
     def __init__(self,
                  directory=None,
