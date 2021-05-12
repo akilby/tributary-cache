@@ -6,16 +6,18 @@ import tempfile
 class Memoizer(object):
 
     def __init__(self,
-                 directory=os.path.join(tempfile.gettempdir(), '_cache'),
+                 directory=None,
                  verbose=0):
 
         """
         Users should be able to declare, or use default temp directory
         Or, there can be a module-based config file like NPI, like already
         exists, and can retrieve config file once the module name is known
-        Should also have the option to turn off caching at the function level
-        Ask ryan best way
+        can bypass caching using bare_func
         """
+
+        if not directory:
+            directory = os.path.join(tempfile.gettempdir(), '_cache')
 
         self.directory = directory
         self.exclusion_list = []
@@ -26,14 +28,12 @@ class Memoizer(object):
 
     def cache(self, function):
 
+        # TO DO: This is a workaround; should move to using only
+        # an attribute on the wrapper
         function.is_cacher_registered = True
 
         @functools.wraps(function)
         def wrapper(*args, **kwargs):
-
-            # if '_block_cache' in kwargs:
-            #     kwargs.pop('_block_cache')
-            #     return function(*args, **kwargs)
 
             module_to_import = function.__module__
 
@@ -45,6 +45,7 @@ class Memoizer(object):
 
             return getattr(c, function.__code__.co_name)(*args, **kwargs)
 
+        wrapper.is_cacher_registered = True
         wrapper.bare_func = function
 
         return wrapper
