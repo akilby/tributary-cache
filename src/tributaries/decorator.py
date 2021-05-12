@@ -42,11 +42,12 @@ class Cacher(object):
 
             module_to_import = function.__module__
 
-            from cache import cache
+            from . import cache
             c = cache.Cache(configure={'directory': self.directory,
                                        'registry': [module_to_import],
                                        'exclusion_list': self.exclusion_list},
-                            noisily=self.noisily)
+                            noisily=self.noisily,
+                            old_version=False)
 
             return getattr(c, function.__code__.co_name)(*args, **kwargs)
 

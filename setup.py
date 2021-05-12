@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(name='tributaries',
       version='0.2',
-      description='Complex memoization to file, '
+      description='Complex file-based memoization, '
       'with function code and dependency function code awareness',
       url='http://github.com/akilby/tributary-cache',
       author='Angela E. Kilby',

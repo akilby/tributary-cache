@@ -27,17 +27,15 @@ import time
 from pickle import UnpicklingError
 
 import pandas as pd
-from cache.config import config_path
-from cache.config import configure as configure_
-from cache.config import (configure_report, get_config, load_config,
-                          write_configs)
-from cache.disk.operations import (cache_to_disk, purge_id_in_cache,
-                                   search_cache)
-from cache.initialize import directory, exclusion_list, globals_list
-from cache.metadata import (determine_metadata,
-                            refactor_metadata_for_readability)
-from cache.utils.globalslister import new_globals
-from cache.utils.utils import pickle_dump, pickle_read, printn, terminal_width
+
+from .config import config_path
+from .config import configure as configure_
+from .config import configure_report, get_config, load_config, write_configs
+from .disk.operations import cache_to_disk, purge_id_in_cache, search_cache
+from .initialize import directory, exclusion_list, globals_list
+from .metadata import determine_metadata, refactor_metadata_for_readability
+from .utils.globalslister import new_globals
+from .utils.utils import pickle_dump, pickle_read, printn, terminal_width
 
 
 class Cache(object):
@@ -48,7 +46,7 @@ class Cache(object):
                  noisily=False,
                  configure=False,
                  rerun=False,
-                 old_version=False):
+                 old_version=True):
         # at some point implement verbose = 0, 1, 2 instead of noisily
         self.noisily = noisily
         self.rerun = rerun

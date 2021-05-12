@@ -6,10 +6,11 @@ import itertools
 import types
 
 import dill
-from cache.utils.globalslister import retrieve_all_funcs
-from cache.utils.utils import get_system_packages
 from stdlib_list import stdlib_list
 from undecorated import undecorated
+
+from .globalslister import retrieve_all_funcs
+from .utils import get_system_packages
 
 
 def code_tree(func, args, kwargs,

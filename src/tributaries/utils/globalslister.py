@@ -1,7 +1,8 @@
 import importlib
 
-from cache.config import load_config
 from undecorated import undecorated
+
+from ..config import load_config
 
 _old = globals().copy()
 
@@ -15,7 +16,8 @@ def new_globals(config_file):
             globals().pop(item)
 
     directory, registry, exclusion_list = load_config(config_file)
-    registry.append('cache.utils.universalmodules')
+    from .. import util_mod
+    registry.append(util_mod)
 
     for module in registry:
         allfuncs = retrieve_all_funcs(module)
@@ -26,8 +28,9 @@ def new_globals(config_file):
 
 
 def retrieve_all_funcs(module):
+    from .. import dec_mod
     allfuncs = vars(importlib.import_module(module))
-    decorator_funcs = vars(importlib.import_module('cache.decorator'))
+    decorator_funcs = vars(importlib.import_module(dec_mod))
     allfuncs = {funcname: func for funcname, func in allfuncs.items()
                 if funcname not in ["wraps"]
                 + [key for key in decorator_funcs.keys()

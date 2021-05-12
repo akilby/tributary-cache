@@ -8,7 +8,7 @@ import time
 import warnings
 from collections import OrderedDict
 
-from cache.utils.utils import listr, single_item
+from .utils.utils import listr, single_item
 
 
 def configure(stash=False, path=None):
