@@ -1,4 +1,6 @@
-#  tributary-cache - complex file-based memoization and caching
+#  tributary-cache
+
+*Complex file-based memoization and caching*
 
 This is a complex file-based memoization package. It has two distinguishing features:
 
