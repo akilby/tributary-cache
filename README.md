@@ -18,7 +18,7 @@ cacher = Cacher(directory='/scratch/akilby/Output/Cache/temp', verbose=0)
 
 @cacher.register
 def foo():
-	pass
+  pass
 ```
 
 ## Command Line Setup - Deprecated version of package ##
