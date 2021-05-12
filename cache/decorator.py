@@ -1,26 +1,34 @@
 import functools
+import tempfile
 
 
-def cache_decorator(function):
+class Memoizer(object):
+    def __init__(self, directory=tempfile.gettempdir(), verbose=0):
 
-    @functools.wraps(function)
-    def wrapper(*args, **kwargs):
+        """
+        Users should be able to declare, or use default temp directory
+        Or, there can be a module-based config file like NPI, like already
+        exists, and can retrieve config file once the module name is known
+        """
 
-        module_to_import = function.__module__
+        self.directory = directory
+        self.exclusion_list = []
+        self.noisily = False if verbose == 0 else True
 
-        from cache import cache
+    def cache(self, function):
 
-        # THIS IS WRONG, BUT TEMPORARY - need to implement some sort of
-        # module-based instruction... something like joblib. Also rename
-        # the decorator and have it take arguments
-        path = '/scratch/akilby/Output/Cache/temp'
-        exclusion_list = []
+        @functools.wraps(function)
+        def wrapper(*args, **kwargs):
 
-        c = cache.Cache(configure={'directory': path,
-                                   'registry': [module_to_import],
-                                   'exclusion_list': exclusion_list},
-                        noisily=True)
-        return getattr(c, function.__code__.co_name)(*args, **kwargs)
+            module_to_import = function.__module__
 
-    wrapper.is_cacher_registered = True
-    return wrapper
+            from cache import cache
+
+            c = cache.Cache(configure={'directory': self.directory,
+                                       'registry': [module_to_import],
+                                       'exclusion_list': self.exclusion_list},
+                            noisily=self.noisily)
+            return getattr(c, function.__code__.co_name)(*args, **kwargs)
+
+        wrapper.is_cacher_registered = True
+        return wrapper
