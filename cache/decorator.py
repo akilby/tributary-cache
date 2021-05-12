@@ -1,9 +1,12 @@
 import functools
+import os
 import tempfile
 
 
 class Memoizer(object):
-    def __init__(self, directory=tempfile.gettempdir(), verbose=0):
+    def __init__(self,
+                 directory=os.path.join(tempfile.gettempdir(), '_cache'),
+                 verbose=0):
 
         """
         Users should be able to declare, or use default temp directory
@@ -14,6 +17,9 @@ class Memoizer(object):
         self.directory = directory
         self.exclusion_list = []
         self.noisily = False if verbose == 0 else True
+
+        if not os.path.isdir(self.directory):
+            os.mkdir(self.directory)
 
     def cache(self, function):
 
