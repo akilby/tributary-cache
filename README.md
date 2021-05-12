@@ -1,4 +1,4 @@
-# cache - complex file-based memoization and caching
+#  tributary-cache - complex file-based memoization and caching
 
 
 This is a complex file-based memoization package. It has two distinguishing features:
@@ -9,8 +9,7 @@ This is a complex file-based memoization package. It has two distinguishing feat
 
 It is transparent and portable, in that metadata and the outputs of the function are pickled in a readable format. It also has various optimizations to assist in work with large file sizes, like hashing pandas data frames.
 
-
-It's still kludgy, but very handy.
+It's still kludgy, but very handy, especially for data science workflows.
 
 Warning: this package does its best to search for all functions called by the memoized function, but it definitely does not yet work perfectly. For example, some functions called inside a class don't seem to be recognized.
 

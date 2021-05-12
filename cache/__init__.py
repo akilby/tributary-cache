@@ -1,1 +1,1 @@
-from cache.decorator import Memorizer
+from cache.decorator import Cacher

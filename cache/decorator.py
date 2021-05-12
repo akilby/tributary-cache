@@ -3,7 +3,7 @@ import os
 import tempfile
 
 
-class Memorizer(object):
+class Cacher(object):
 
     def __init__(self,
                  directory=None,
@@ -26,7 +26,7 @@ class Memorizer(object):
         if not os.path.isdir(self.directory):
             os.mkdir(self.directory)
 
-    def cache(self, function):
+    def register(self, function):
 
         # TO DO: This is a workaround; should move to using only
         # an attribute on the wrapper
