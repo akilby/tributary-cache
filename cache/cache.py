@@ -47,12 +47,14 @@ class Cache(object):
                  exclusion_list=exclusion_list,
                  noisily=False,
                  configure=False,
-                 rerun=False):
-
+                 rerun=False,
+                 old_version=False):
+        # at some point implement verbose = 0, 1, 2 instead of noisily
         self.noisily = noisily
         self.rerun = rerun
         self.directory = directory
         self.exclusion_list = exclusion_list
+        self.old_version = old_version
         self.counter_path = os.path.join(self.directory, 'counter.pkl')
         self.handle_configure(configure)
         self.handle_counter()
@@ -75,7 +77,8 @@ class Cache(object):
         printn('-'*terminal_width(), self.noisily)
         printn('* Function: %s' % func, self.noisily)
 
-        metadata = self.get_metadata(func, args, kwargs)
+        metadata = self.get_metadata(
+            func, args, kwargs, old_version=self.old_version)
 
         rerun = True if self.rerun else rerun
         id_ = self.locate_id(metadata, rerun)
@@ -98,9 +101,10 @@ class Cache(object):
 
         return output
 
-    def get_metadata(self, func, args, kwargs):
+    def get_metadata(self, func, args, kwargs, old_version=False):
         metadata = determine_metadata(func, args, kwargs,
-                                      self.exclusion_list, self.globals_list)
+                                      self.exclusion_list, self.globals_list,
+                                      old_version=old_version)
         printn('* Metadata: %s '
                % refactor_metadata_for_readability(metadata), self.noisily)
         printn('* (identified) Called functions: %s'

@@ -1,4 +1,4 @@
-from functools import wraps
+import functools
 
 # THIS IS WRONG, BUT TEMPORARY - need to implement some sort of
 # module-based instruction... something like joblib. Also rename
@@ -9,7 +9,7 @@ exclusion_list = []
 
 def cache_decorator(function):
 
-    @wraps(function)
+    @functools.wraps(function)
     def wrapper(*args, **kwargs):
 
         module_to_import = function.__module__
@@ -21,4 +21,5 @@ def cache_decorator(function):
                         noisily=True)
         return getattr(c, function.__code__.co_name)(*args, **kwargs)
 
+    wrapper.is_cacher_registered = True
     return wrapper

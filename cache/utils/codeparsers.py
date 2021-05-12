@@ -11,14 +11,13 @@ from cache.utils.utils import get_system_packages
 from stdlib_list import stdlib_list
 from undecorated import undecorated
 
-# import warnings
 
-old_version = False
-
-
-def code_tree(func, args, kwargs, exclusion_list, globals_list):
+def code_tree(func, args, kwargs,
+              exclusion_list, globals_list,
+              old_version=False):
     child_funcs = get_all_children(func, args, kwargs,
-                                   exclusion_list, globals_list)
+                                   exclusion_list, globals_list,
+                                   old_version=old_version)
     code = {f: get_source(f, globals_list) for f in [func] + child_funcs}
     return code
 
@@ -62,13 +61,19 @@ def remove_all_docstrings_from_metadata(m):
     return m
 
 
-def get_all_children(func, args, kwargs, exclusion_list, globals_list):
-    child_funcs = func_calls(globals_list[func], globals_list)
-    arg_children = [[x.__name__] + func_calls(x, globals_list) for x in args
+def get_all_children(func, args, kwargs,
+                     exclusion_list, globals_list,
+                     old_version=False):
+    child_funcs = func_calls(
+        globals_list[func], globals_list, old_version=old_version)
+    arg_children = [[x.__name__]
+                    + func_calls(x, globals_list, old_version=old_version)
+                    for x in args
                     if isinstance(x, types.FunctionType)]
     child_funcs = child_funcs + list(
         itertools.chain.from_iterable(arg_children))
-    kwarg_children = [[x[1].__name__] + func_calls(x[1], globals_list)
+    kwarg_children = [[x[1].__name__]
+                      + func_calls(x[1], globals_list, old_version=old_version)
                       for x in kwargs.items()
                       if isinstance(x[1], types.FunctionType)]
     child_funcs = child_funcs + list(

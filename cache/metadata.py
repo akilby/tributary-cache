@@ -2,13 +2,16 @@ from cache.utils.codeparsers import code_tree
 from cache.utils.objecthashers import complex_hasher
 
 
-def determine_metadata(func, args, kwargs, exclusion_list, globals_list):
+def determine_metadata(func, args, kwargs,
+                       exclusion_list, globals_list,
+                       old_version=False):
     metadata = dict()
     metadata['func'] = func
     metadata['args'] = args
     metadata['kwargs'] = kwargs
     metadata['code'] = code_tree(func, args, kwargs,
-                                 exclusion_list, globals_list)
+                                 exclusion_list, globals_list,
+                                 old_version=old_version)
     return refactor_metadata_for_storage(metadata)
 
 
