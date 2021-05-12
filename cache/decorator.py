@@ -32,7 +32,6 @@ class Memoizer(object):
         def wrapper(*args, **kwargs):
 
             if '_block_cache' in kwargs:
-                print('yes')
                 kwargs.pop('_block_cache')
                 return function(*args, **kwargs)
 
