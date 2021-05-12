@@ -12,16 +12,17 @@ It's still kludgy, but very handy, especially for data science workflows. If you
 Warning: this package does its best to search for all functions called by the memoized function, but it does not yet work perfectly. For example, some functions called inside a class don't seem to be recognized.
 
 
-```
+```python
 from tributaries import Cacher
 cacher = Cacher(directory='/path/to/cache/directory/', verbose=0)
 
+
 @cacher.register
 def clean_my_data(df_raw):
-  df_intermed1 = time_consuming_cleaning_process1(df_raw)
-  df_intermed2 = time_consuming_cleaning_process2(df_intermed1)
-  df_final = time_consuming_cleaning_process3(df_intermed2)
-  return df_final
+    df_intermed1 = time_consuming_cleaning_process1(df_raw)
+    df_intermed2 = time_consuming_cleaning_process2(df_intermed1)
+    df_final = time_consuming_cleaning_process3(df_intermed2)
+    return df_final
 ```
 If function `clean_my_data` is registered, the first run will be time-consuming, but subsequent runs will load nearly-instantly, provided the code of the function and all dependencies have not changed.
 
