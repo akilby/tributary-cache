@@ -22,7 +22,6 @@ def new_globals(config_file):
         globals().update(allfuncs)
 
     globals_list = globals()
-    # print(globals_list.keys())
     return globals_list
 
 
@@ -37,4 +36,5 @@ def retrieve_all_funcs(module):
         if not funcname.startswith('__'):
             if hasattr(func, "is_cacher_registered"):
                 allfuncs[funcname] = undecorated(allfuncs[funcname])
+                allfuncs[funcname].is_cacher_registered = True
     return allfuncs
