@@ -9,22 +9,14 @@ This is a complex file-based memoization package. It has two distinguishing feat
 
 It is transparent and portable, in that metadata and the outputs of the function are pickled in a readable format. It also has various optimizations to assist in work with large file sizes, like hashing pandas data frames.
 
-If you instantiate a Cache object, you can call any registered function as a method of the cache instance:
-
-```
-c = cache.Cache()
-
-out = c.foo(args)
-```
-Note that the registered function `foo` also remains a regular function and does not *need* to be memoized.
 
 It's still kludgy, but very handy.
 
-Warning: this package does its best to search for all functions called by the memoized function, but it definitely does not yet work perfectly. For example, some function called inside a class don't seem to be recognized.
+Warning: this package does its best to search for all functions called by the memoized function, but it definitely does not yet work perfectly. For example, some functions called inside a class don't seem to be recognized.
 
 
 
-## Command Line Setup ##
+## Command Line Setup - Deprecated version of package ##
 
 This package comes with a command line utility to facilitate set up:
 
@@ -35,3 +27,15 @@ This will prompt you to:
 2. Provide a list of user-written packages for registry with the cacher
 3. Specify which submodules of the packages to register
 	(on first run, specifying 'n' at "Prompt submodules?" will register all submodules)
+
+
+If you instantiate a Cache object, you can call any registered function as a method of the cache instance:
+
+```
+c = cache.Cache()
+
+out = c.foo(args)
+```
+Note that the registered function `foo` also remains a regular function and does not *need* to be memoized.
+
+
