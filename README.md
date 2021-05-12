@@ -14,6 +14,11 @@ It's still kludgy, but very handy, especially for data science workflows.
 Warning: this package does its best to search for all functions called by the memoized function, but it definitely does not yet work perfectly. For example, some functions called inside a class don't seem to be recognized.
 
 
+from tributarycache import Cacher
+
+from tributaries import Cacher
+
+
 
 ## Command Line Setup - Deprecated version of package ##
 
