@@ -151,7 +151,8 @@ def func_calls(fct, globals_list, old_version=False):
             # update to allow full recursion
             n_get = [x for x in n if x not in globals_list.keys()]
             if n_get:
-                print('adding to globals_list by recursion')
+                # should add verbosity here
+                # print('adding to globals_list by recursion')
                 all_funcs = retrieve_all_funcs(mod)
                 globals_list.update(all_funcs)
 
