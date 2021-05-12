@@ -25,7 +25,7 @@ def clean_my_data(df_raw):
 ```
 If function `clean_my_data` is registered, the first run will be time-consuming, but subsequent runs will load nearly-instantly, provided the code of the function and all dependencies have not changed.
 
-Dependency functions such `time_consuming_cleaning_process1` can be themselves registered, to save time while working on intermediate cleaning steps.
+Dependency functions such `time_consuming_cleaning_process1` can be themselves registered, to save time while working on intermediate cleaning steps. Whether or not they are not registered, changes to their code will still prompt `clean_my_data` to re-run if called.
 
 
 
