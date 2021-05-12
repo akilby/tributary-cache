@@ -31,7 +31,7 @@ def get_source(func, globals_list, remove_docs=True):
         try:
             sc = dill.source.getsource(undecorated(globals_list[func]))
             assert sc.startswith('@cache_decorator\ndef %s(' % func)
-            assert globals_list[func].is_cacher_registered
+            # assert globals_list[func].is_cacher_registered
             # warnings.warn(
             # 'Trying out a cache decorator: still in development')
         except AssertionError:
@@ -95,7 +95,7 @@ def get_cached_children(func, globals_list,
         try:
             sc = dill.source.getsource(undecorated(globals_list[func]))
             assert sc.startswith('@cache_decorator\ndef %s(' % func)
-            assert globals_list[func].is_cacher_registered
+            # assert globals_list[func].is_cacher_registered
             # should take out the first two lines here and above
             # warnings.warn(
             # 'Trying out a cache decorator: still in development')
