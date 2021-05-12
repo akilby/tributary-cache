@@ -1,4 +1,4 @@
-from .decorator import Cacher
+from decorator import Cacher
 
 package_name = __name__
 print(package_name)
