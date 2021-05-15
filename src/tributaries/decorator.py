@@ -3,11 +3,15 @@ import os
 import tempfile
 import warnings
 
+from .config import get_config_package
+
 
 class Cacher(object):
 
     def __init__(self,
+                 configure_disk=None,
                  directory=None,
+                 exclusion_list=[],
                  verbose=0):
 
         """
@@ -16,6 +20,9 @@ class Cacher(object):
         exists, and can retrieve config file once the module name is known
         can bypass caching using bare_func
         """
+
+        if configure_disk:
+            directory, noisily, rerun = get_config_package(configure_disk)
 
         if not directory:
             directory = os.path.join(tempfile.gettempdir(), '_cache')

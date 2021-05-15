@@ -256,6 +256,14 @@ def configure_report(config_file=None):
             print(linep)
 
 
+def get_config_package(name):
+    path = config_path(name=name)
+    if not os.path.exists(path):
+        configure_package(name)
+    directory, noisily, rerun = load_config_package(path)
+    return directory, noisily, rerun
+
+
 def configure_package(name):
     config_file = config_path(name=name)
     dir_def, noisily_def, rerun_def = config_defaults_package(config_file)
