@@ -269,7 +269,8 @@ def configure_package(name):
     dir_def, noisily_def, rerun_def = config_defaults_package(config_file)
     cache_directory = user_prompt("Directory for storing cache"
                                   " files for this package (you probably don't"
-                                  "want this to be in your temp directory)",
+                                  " want this to be in your temp directory, "
+                                  "which is the default)",
                                   default=dir_def)
     noisily = user_prompt('Cache noisily (y) or quietly (n)? ',
                           default=noisily_def,
