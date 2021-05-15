@@ -1,3 +1,8 @@
+"""
+Note: requires an absolute import of util_mod and dec_mod,
+in both functions
+"""
+
 import importlib
 
 from undecorated import undecorated
