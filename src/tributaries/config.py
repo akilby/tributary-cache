@@ -333,5 +333,5 @@ def config_defaults_package(config_file):
         tempdir = os.path.join(tempfile.gettempdir(), '_cache')
         if not os.path.isdir(tempdir):
             os.mkdir(tempdir)
-        (noisily, rerun) = (tempdir, 'None', 'None')
-    return noisily, rerun
+        (dir_def, noisily, rerun) = (tempdir, 'None', 'None')
+    return dir_def, noisily, rerun
