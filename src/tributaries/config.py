@@ -4,6 +4,7 @@ import itertools
 import os
 import pkgutil
 import shutil
+import tempfile
 import time
 import warnings
 from collections import OrderedDict
@@ -230,8 +231,19 @@ def configuration_check():
 
 def get_config():
     """Returns config parameters"""
-    configuration_check()
-    return load_config(config_path())
+    # configuration_check()
+    # return load_config(config_path())
+    """
+    New version completely bypasses all user prompts and makes them obsolete
+    Just seeds the directory as a tempdirectory
+    Should issue a warning somewhere
+    """
+    tempdir = os.path.join(tempfile.gettempdir(), '_cache')
+    if not os.path.isdir(tempdir):
+        os.mkdir(tempdir)
+    return (tempdir,
+            [],
+            [])
 
 
 def configure_report(config_file=None):
