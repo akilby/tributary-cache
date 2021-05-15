@@ -61,7 +61,7 @@ class Cache(object):
                 and isinstance(exclusion_list, list)):
             configure = {'directory': directory,
                          'registry': registry,
-                         'exclusion_list': exclusion_list},
+                         'exclusion_list': exclusion_list}
         self.handle_configure(configure)
         self.handle_counter()
 
