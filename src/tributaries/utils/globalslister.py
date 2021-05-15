@@ -16,7 +16,7 @@ def new_globals(config_file):
             globals().pop(item)
 
     directory, registry, exclusion_list = load_config(config_file)
-    from .. import util_mod
+    from tributaries import util_mod
     registry.append(util_mod)
 
     for module in registry:
@@ -28,7 +28,7 @@ def new_globals(config_file):
 
 
 def retrieve_all_funcs(module):
-    from .. import dec_mod
+    from tributaries import dec_mod
     allfuncs = vars(importlib.import_module(module))
     decorator_funcs = vars(importlib.import_module(dec_mod))
     allfuncs = {funcname: func for funcname, func in allfuncs.items()
