@@ -56,7 +56,7 @@ class Cache(object):
         self.old_version = old_version
         self.counter_path = os.path.join(self.directory, 'counter.pkl')
         if (not configure
-                and isinstance(directory, 'str')
+                and isinstance(directory, str)
                 and isinstance(registry, list)
                 and isinstance(exclusion_list, list)):
             configure = {'directory': directory,
