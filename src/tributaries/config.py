@@ -266,6 +266,7 @@ def get_config_package(name):
 
 def configure_package(name):
     config_file = config_path(name=name)
+    print(config_file)
     dir_def, noisily_def, rerun_def = config_defaults_package(config_file)
     cache_directory = user_prompt("Directory for storing cache"
                                   " files for this package (you probably don't"
@@ -280,6 +281,10 @@ def configure_package(name):
                         inlist=['y', 'n'])
     noisily = True if noisily == 'y' else False
     rerun = True if rerun == 'y' else False
+    print(config_file)
+    print(cache_directory)
+    print(noisily)
+    print(rerun)
     write_configs_package(config_file, cache_directory, noisily, rerun)
     print('Configuration file saved to %s' % config_file)
 
@@ -288,6 +293,10 @@ def write_configs_package(config_file, cache_directory, noisily, rerun):
     """
     Writes configurations to file for package
     """
+    print(config_file)
+    print(cache_directory)
+    print(noisily)
+    print(rerun)
     with open(config_file, 'w') as f:
         writer = csv.writer(f, delimiter='\n')
         writer.writerow(['Cache Directory:'])
