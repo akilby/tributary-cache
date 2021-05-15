@@ -42,6 +42,7 @@ class Cache(object):
 
     def __init__(self,
                  directory=directory,
+                 registry=None,
                  exclusion_list=exclusion_list,
                  noisily=False,
                  configure=False,
@@ -54,6 +55,13 @@ class Cache(object):
         self.exclusion_list = exclusion_list
         self.old_version = old_version
         self.counter_path = os.path.join(self.directory, 'counter.pkl')
+        if (not configure
+                and isinstance(directory, 'str')
+                and isinstance(registry, list)
+                and isinstance(exclusion_list, list)):
+            configure = {'directory': directory,
+                         'registry': registry,
+                         'exclusion_list': exclusion_list},
         self.handle_configure(configure)
         self.handle_counter()
 
