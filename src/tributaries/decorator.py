@@ -60,5 +60,6 @@ class Cacher(object):
 
         wrapper.is_cacher_registered = True
         wrapper.bare_func = function
+        wrapper.current_cacher_directory = self.directory
 
         return wrapper
