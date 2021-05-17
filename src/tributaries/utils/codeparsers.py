@@ -66,7 +66,7 @@ def remove_all_docstrings_from_metadata(m):
 def get_all_children(func, args, kwargs,
                      exclusion_list, globals_list,
                      old_version=False):
-    child_funcs = func_calls(
+    child_funcs, not_callable_globals = func_calls(
         globals_list[func], globals_list, old_version=old_version)
     arg_children = [[x.__name__]
                     + func_calls(x, globals_list, old_version=old_version)
@@ -141,6 +141,7 @@ def func_calls(fct, globals_list, old_version=False):
         print('NEW LIST: ', new_list)
         print([globals_list[x] for x in new_list])
         raise Exception('weird func calls error')
+    not_callable_globals = []
     old_list = new_list
     old_list = functionize(old_list, globals_list)
     big_old_list = old_list
@@ -163,12 +164,15 @@ def func_calls(fct, globals_list, old_version=False):
                 globals_list.update(all_funcs)
 
             n = [x for x in n if x in globals_list.keys()]
+            non_callable = [x for x in n if not callable(globals_list[x])]
+            n = [x for x in n if callable(globals_list[x])]
             n = [x for x in n if globals_list[x].__name__ not in sys_packages]
+            not_callable_globals = not_callable_globals + non_callable
 
         new_list = new_list + n
         old_list = old_list[1:] + functionize(n, globals_list)
         big_old_list = old_list + big_old_list
-    return new_list
+    return new_list, not_callable_globals
 
 
 def new_func_calls(fct, old_list, old_version):
