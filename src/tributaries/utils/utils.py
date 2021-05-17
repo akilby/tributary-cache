@@ -2,6 +2,7 @@ import importlib
 import os
 import pickle
 import subprocess
+from collections import OrderedDict
 
 from stdlib_list import stdlib_list
 
@@ -62,3 +63,7 @@ def check_more_builtins(name):
     if name in libraries:
         return True
     return False
+
+
+def ordered_unique_list(list_to_set):
+    return list(OrderedDict.fromkeys(list_to_set).keys())

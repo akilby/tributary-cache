@@ -16,3 +16,23 @@ an attribute on the wrapper
 Fix:
 * Cache found - loading from ID None:
 * Cache not found; running
+
+
+Consider what to do:
+
+```python
+print_statement = 'fghij'
+m = 3
+
+
+@cacher.register
+def try_a_print_statement():
+    print(print_statement)
+
+
+@cacher.register
+def try_a_print_multiplier(foo):
+    return foo * m
+```
+
+Changing print_statement and m will *not* cause the cacher to re-run. That is handy in the first case but very bad in the second. What should I do?

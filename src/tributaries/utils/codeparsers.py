@@ -10,7 +10,7 @@ from stdlib_list import stdlib_list
 from undecorated import undecorated
 
 from .globalslister import retrieve_all_funcs
-from .utils import get_system_packages
+from .utils import get_system_packages, ordered_unique_list
 
 
 def code_tree(func, args, kwargs,
@@ -128,8 +128,12 @@ def get_cached_children(func, globals_list,
 
 
 def func_calls(fct, globals_list, old_version=False):
+    """
+    This is the function where most of the management and searching
+    action happens. get_function_calls actually parses the code itself
+    """
     sys_packages = get_system_packages()
-    new_list = get_function_calls(fct)
+    new_list = get_function_calls(fct, old_version=old_version)
     try:
         new_list = [x for x in new_list if globals_list[x].__name__
                     not in sys_packages]
@@ -142,7 +146,8 @@ def func_calls(fct, globals_list, old_version=False):
     big_old_list = old_list
     while old_list != []:
         mod = old_list[0].__module__
-        n = new_func_calls(old_list[0], big_old_list)
+        n = new_func_calls(
+            old_list[0], big_old_list, globals_list, old_version=old_version)
         if old_version:
             # This is where a non-registered function gets dropped
             n = [x for x in n if x in globals_list.keys()
@@ -166,42 +171,66 @@ def func_calls(fct, globals_list, old_version=False):
     return new_list
 
 
-def new_func_calls(fct, old_list):
+def new_func_calls(fct, old_list, old_version):
     old_list = [x.__name__ for x in old_list]
-    gfc = get_function_calls(fct)
+    gfc = get_function_calls(fct, old_version=old_version)
     return [x for x in gfc if x not in old_list]
 
 
-def get_function_calls(fct, built_ins=False):
+def get_function_calls(fct, built_ins=False, old_version=False):
     funcs = []
     bytecode = dis.Bytecode(fct)
     instrs = list(reversed([instr for instr in bytecode]))
-    for (i, inst) in enumerate(instrs):
-        if inst.opname[:13] == "CALL_FUNCTION":
-            if not inst.opname[13:16] == "_EX":
-                if inst.opname[13:16] == "_KW":
-                    ep = i + inst.arg + 2
-                elif inst.opname[13:16] == "_EX":
-                    pass
-                else:
-                    ep = i + inst.arg + 1
-                entry = instrs[ep]
-                name = str(entry.argval)
-                if ("." not in name and entry.opname == "LOAD_GLOBAL" and
+    if old_version:
+        for (i, inst) in enumerate(instrs):
+            if inst.opname[:13] == "CALL_FUNCTION":
+                if not inst.opname[13:16] == "_EX":
+                    if inst.opname[13:16] == "_KW":
+                        ep = i + inst.arg + 2
+                    elif inst.opname[13:16] == "_EX":
+                        pass
+                    else:
+                        ep = i + inst.arg + 1
+                    entry = instrs[ep]
+                    print(i, inst, ep, entry)
+                    name = str(entry.argval)
+                    if ("." not in name and
+                            entry.opname == "LOAD_GLOBAL" and
+                            (built_ins or
+                                not hasattr(builtins, name))):
+                        funcs.append(name)
+                    else:
+                        if not old_version and inst.opname[13:16] == "_KW":
+                            # Check next line... possibly only for _KW?
+                            # Doing that for now
+                            ep = ep + 1
+                            entry = instrs[ep]
+                            print(i, inst, ep, entry)
+                            name = str(entry.argval)
+                            if ("." not in name and
+                                    entry.opname == "LOAD_GLOBAL" and
+                                    (built_ins or
+                                        not hasattr(builtins, name))):
+                                funcs.append(name)
+        c = 0
+        for (i, inst) in enumerate(instrs):
+            if inst.opname == "CALL_FUNCTION_EX":
+                c = 1
+            if c == 1:
+                name = str(inst.argval)
+                if ("." not in name and inst.opname == "LOAD_GLOBAL" and
                         (built_ins or not hasattr(builtins, name))):
                     funcs.append(name)
-    c = 0
-    for (i, inst) in enumerate(instrs):
-        if inst.opname == "CALL_FUNCTION_EX":
-            c = 1
-        if c == 1:
-            name = str(inst.argval)
-            if ("." not in name and inst.opname == "LOAD_GLOBAL" and
-                    (built_ins or not hasattr(builtins, name))):
-                funcs.append(name)
-                c = 0
+                    c = 0
+    else:
+        for (i, inst) in enumerate(instrs):
+            if inst.opname == "LOAD_GLOBAL":
+                funcs.append(str(inst.argval))
+
+    funcs = [name for name in funcs if not hasattr(builtins, name)]
     funcs = [name for name in funcs if not check_external(name)]
     funcs = [name for name in funcs if not check_more_builtins(name)]
+    funcs = ordered_unique_list(funcs)
     return funcs
 
 
@@ -218,6 +247,22 @@ def functionize(li, g):
             raise Exception('passed a non-class, non-function, confused')
     return return_list
 
+
+# def check_external(name, globals_list):
+#     def ce(name):
+#         if importlib.util.find_spec(name):
+#             if ('python' in importlib.util.find_spec(name).origin
+#                 and ('base' in importlib.util.find_spec(name).origin
+#                      or 'site-packages' in importlib.util.find_spec(name).origin)):
+#                 return True
+#         return False
+#     if ce(name):
+#         return True
+#     elif name in globals_list:
+#         name = globals_list[name].__name__
+#         return ce(name)
+#     else:
+#         return False
 
 def check_external(name):
     if importlib.util.find_spec(name):
