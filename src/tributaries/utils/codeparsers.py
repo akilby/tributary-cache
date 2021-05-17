@@ -66,7 +66,7 @@ def remove_all_docstrings_from_metadata(m):
 def get_all_children(func, args, kwargs,
                      exclusion_list, globals_list,
                      old_version=False):
-    child_funcs, not_callable_globals = func_calls(
+    child_funcs, non_callable_globals = func_calls(
         globals_list[func], globals_list, old_version=old_version)
     arg_children = [[x.__name__]
                     + func_calls(x, globals_list, old_version=old_version)
@@ -134,6 +134,10 @@ def func_calls(fct, globals_list, old_version=False):
     """
     sys_packages = get_system_packages()
     new_list = get_function_calls(fct, old_version=old_version)
+    if not old_version:
+        new_list = [globals_list[x].__package__
+                    if hasattr(globals_list[x], '__package__')
+                    else x for x in new_list]
     try:
         new_list = [x for x in new_list if globals_list[x].__name__
                     not in sys_packages]
@@ -155,6 +159,9 @@ def func_calls(fct, globals_list, old_version=False):
                  and globals_list[x].__name__
                  not in sys_packages]
         else:
+            n = [globals_list[x].__package__
+                 if hasattr(globals_list[x], '__package__')
+                 else x for x in n]
             # update to allow full recursion
             n_get = [x for x in n if x not in globals_list.keys()]
             if n_get:
