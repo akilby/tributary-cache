@@ -141,7 +141,7 @@ def func_calls(fct, globals_list, old_version=False):
         print('NEW LIST: ', new_list)
         print([globals_list[x] for x in new_list])
         raise Exception('weird func calls error')
-    not_callable_globals = []
+    non_callable_globals = []
     old_list = new_list
     old_list = functionize(old_list, globals_list)
     big_old_list = old_list
@@ -167,12 +167,12 @@ def func_calls(fct, globals_list, old_version=False):
             non_callable = [x for x in n if not callable(globals_list[x])]
             n = [x for x in n if callable(globals_list[x])]
             n = [x for x in n if globals_list[x].__name__ not in sys_packages]
-            not_callable_globals = not_callable_globals + non_callable
+            non_callable_globals = non_callable_globals + non_callable
 
         new_list = new_list + n
         old_list = old_list[1:] + functionize(n, globals_list)
         big_old_list = old_list + big_old_list
-    return new_list, not_callable_globals
+    return new_list, non_callable_globals
 
 
 def new_func_calls(fct, old_list, old_version):
@@ -232,8 +232,8 @@ def get_function_calls(fct, built_ins=False, old_version=False):
                 funcs.append(str(inst.argval))
 
     funcs = [name for name in funcs if not hasattr(builtins, name)]
-    funcs = [name for name in funcs if not check_external(name)]
     funcs = [name for name in funcs if not check_more_builtins(name)]
+    funcs = [name for name in funcs if not check_external(name)]
     funcs = ordered_unique_list(funcs)
     return funcs
 
