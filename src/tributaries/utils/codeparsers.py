@@ -147,7 +147,7 @@ def func_calls(fct, globals_list, old_version=False):
     while old_list != []:
         mod = old_list[0].__module__
         n = new_func_calls(
-            old_list[0], big_old_list, globals_list, old_version=old_version)
+            old_list[0], big_old_list, old_version=old_version)
         if old_version:
             # This is where a non-registered function gets dropped
             n = [x for x in n if x in globals_list.keys()
