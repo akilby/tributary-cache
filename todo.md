@@ -4,7 +4,7 @@ If function foo.bar calls blah.bar, name conflicts can maybe be a problem (?) ne
 
 Could use functions themselves as the dictionary key in globals_list, to prevent any conflicts in session
 
-And prepend module names in the cacher dictionary
+And prepend module names in the cacher dictionary... but this might make things much less portable (right now as long as code itself matches, doesn't matter where it lives)
 
 Perhaps set a way to universally disable the cache decorator. so you install the package then disable it
 

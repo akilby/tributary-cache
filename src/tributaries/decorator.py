@@ -32,7 +32,7 @@ class Cacher(object):
                 'or at each instantiation of the Cacher class' % directory)
 
         self.directory = directory
-        self.exclusion_list = []
+        self.exclusion_list = exclusion_list
         self.noisily = False if verbose == 0 else True
 
         if not os.path.isdir(self.directory):
