@@ -17,6 +17,7 @@ def code_tree(func, args, kwargs,
               exclusion_list, globals_list,
               old_version=False):
     (child_funcs,
+        non_callables,
         updated_globals_list) = get_all_children(func, args, kwargs,
                                                  exclusion_list, globals_list,
                                                  old_version=old_version)
@@ -80,6 +81,7 @@ def get_all_children(func, args, kwargs,
                                old_version=old_version)
                     for x in arg_functions]
     arg_children_globals = [x[2] for x in arg_children]
+    arg_noncallables = [x[1] for x in arg_children]
     arg_children = [x[0] for x in arg_children]
 
     # Function calls inside the kwarguments list
@@ -91,6 +93,7 @@ def get_all_children(func, args, kwargs,
                                  old_version=old_version)
                       for val in kwarg_functions]
     kwarg_children_globals = [x[2] for x in kwarg_children]
+    kwarg_noncallables = [x[1] for x in kwarg_children]
     kwarg_children = [x[0] for x in kwarg_children]
 
     # Check there are no conflicting functions in the globals lists:
@@ -110,7 +113,13 @@ def get_all_children(func, args, kwargs,
     child_funcs = child_funcs + get_cached_children(func, globals_list)
     child_funcs = [x for x in child_funcs if x not in exclusion_list]
     child_funcs = list(set(child_funcs))
-    return child_funcs, globals_list
+
+    # Non-callable globals
+    non_callables = (non_callable_globals
+                     + list(itertools.chain.from_iterable(arg_noncallables))
+                     + list(itertools.chain.from_iterable(kwarg_noncallables)))
+
+    return child_funcs, non_callables, globals_list
 
 
 def get_cached_children(func, globals_list,
