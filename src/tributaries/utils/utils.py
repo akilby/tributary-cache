@@ -66,4 +66,4 @@ def check_more_builtins(name):
 
 
 def ordered_unique_list(list_to_set):
-    return list(OrderedDict.fromkeys(list_to_set).keys())
+    return list(OrderedDict.fromkeys(list_to_set))
