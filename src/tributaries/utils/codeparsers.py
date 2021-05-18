@@ -296,11 +296,14 @@ def get_function_calls(fct, built_ins=False, old_version=False):
     else:
         funcs = get_load_globals(instrs)
 
-    dictcomps = identify_code_objects_dictcomp(bytecode)
-    for code in dictcomps:
+    (dictcomps,
+        setcomps,
+        listcomps,
+        genexps) = identify_code_objects_dictcomp(bytecode)
+    for code in dictcomps + setcomps + listcomps + genexps:
         bytecode = dis.Bytecode(code)
         instrs = list(reversed([instr for instr in bytecode]))
-        funcs.append(get_load_globals(instrs))
+        funcs = funcs + get_load_globals(instrs)
 
     funcs = [name for name in funcs if not hasattr(builtins, name)]
     funcs = [name for name in funcs if not check_more_builtins(name)]
@@ -315,7 +318,7 @@ def identify_code_objects_dictcomp(bytecode, verbose=0):
             _group.starts = i
         return _group.starts
 
-    dictcomps = []
+    dictcomps, setcomps, listcomps, genexps = [], [], [], []
     for _, iset in groupby(bytecode, _group):
         iset = list(iset)
         try:
@@ -323,11 +326,12 @@ def identify_code_objects_dictcomp(bytecode, verbose=0):
             # Skip <setcomp>, <dictcomp>, <listcomp> or <genexp>
             if code.co_name == '<dictcomp>':
                 dictcomps.append(code)
-            elif code.co_name in ['<setcomp>', '<listcomp>', '<genexp>']:
-                raise Exception("You may want to parse this, a setcomp, "
-                                "listcomp, or genexp, but it isn't implemented"
-                                "yet. At least listcomp should be "
-                                "straightforward.")
+            elif code.co_name == '<setcomp>':
+                setcomps.append(code)
+            elif code.co_name == '<listcomp>':
+                listcomps.append(code)
+            elif code.co_name == '<genexp>':
+                genexps.append(code)
         except (StopIteration, TypeError):
             continue
         else:
@@ -340,7 +344,7 @@ def identify_code_objects_dictcomp(bytecode, verbose=0):
                 printn((code,
                         'represents a class {!r}'.format(code.co_name)),
                        noisily)
-    return dictcomps
+    return dictcomps, setcomps, listcomps, genexps
 
 
 def get_load_globals(instrs):
