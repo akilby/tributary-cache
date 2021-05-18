@@ -39,8 +39,6 @@ def refactor_metadata_for_readability(metadata):
     for key, val in other_globals.items():
         if isinstance(val, list) and len(val) > 100:
             other_globals[key] = val[:100] + ['...', '-other_globals snipped-']
-        elif isinstance(val, dict):
-            other_globals[key] = val.items()
     m2 = metadata.copy()
     m2['code'] = code
     m2['args'] = args
