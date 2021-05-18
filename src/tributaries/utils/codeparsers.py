@@ -16,10 +16,12 @@ from .utils import get_system_packages, ordered_unique_list
 def code_tree(func, args, kwargs,
               exclusion_list, globals_list,
               old_version=False):
-    child_funcs = get_all_children(func, args, kwargs,
-                                   exclusion_list, globals_list,
-                                   old_version=old_version)
-    code = {f: get_source(f, globals_list) for f in [func] + child_funcs}
+    (child_funcs,
+        updated_globals_list) = get_all_children(func, args, kwargs,
+                                                 exclusion_list, globals_list,
+                                                 old_version=old_version)
+    code = {f: get_source(f, updated_globals_list)
+            for f in [func] + child_funcs}
     return code
 
 
@@ -66,26 +68,49 @@ def remove_all_docstrings_from_metadata(m):
 def get_all_children(func, args, kwargs,
                      exclusion_list, globals_list,
                      old_version=False):
+    # Function calls from the top level function
     child_funcs, non_callable_globals, new_globals_list = func_calls(
         globals_list[func], globals_list, old_version=old_version)
-    print('are globals_list and new_globals_list the same?', globals_list == new_globals_list)
+
+    # Function calls inside the arguments list
     arg_functions = [x for x in args if isinstance(x, types.FunctionType)]
     arg_function_names = [x.__name__ for x in arg_functions]
-    arg_children = [func_calls(x, globals_list, old_version=old_version)
-                    for x in args
-                    if isinstance(x, types.FunctionType)]
-    child_funcs = child_funcs + list(
-        itertools.chain.from_iterable(arg_children))
-    kwarg_functions = [val for val in kwargs.values() if isinstance(val, types.FunctionType)]
+    arg_children = [func_calls(x,
+                               retrieve_all_funcs(x.__module__),
+                               old_version=old_version)
+                    for x in arg_functions]
+    arg_children_globals = [x[2] for x in arg_children]
+    arg_children = [x[0] for x in arg_children]
+
+    # Function calls inside the kwarguments list
+    kwarg_functions = [val for val in kwargs.values()
+                       if isinstance(val, types.FunctionType)]
     kwarg_function_names = [val.__name__ for val in kwarg_functions]
-    kwarg_children = [func_calls(val, globals_list, old_version=old_version)
+    kwarg_children = [func_calls(val,
+                                 retrieve_all_funcs(val.__module__),
+                                 old_version=old_version)
                       for val in kwarg_functions]
-    child_funcs = child_funcs + list(
-        itertools.chain.from_iterable(kwarg_children))
+    kwarg_children_globals = [x[2] for x in kwarg_children]
+    kwarg_children = [x[0] for x in kwarg_children]
+
+    # Check there are no conflicting functions in the globals lists:
+    check_name_collisions(globals_list, new_globals_list)
+    globals_list.update(new_globals_list)
+    for new_globs in arg_children_globals + kwarg_children_globals:
+        check_name_collisions(globals_list, new_globs)
+        globals_list.update(new_globs)
+
+    # Add all found child funcs to the list
+    child_funcs = (child_funcs
+                   + arg_function_names
+                   + kwarg_function_names
+                   + list(itertools.chain.from_iterable(arg_children))
+                   + list(itertools.chain.from_iterable(kwarg_children)))
+
     child_funcs = child_funcs + get_cached_children(func, globals_list)
     child_funcs = [x for x in child_funcs if x not in exclusion_list]
     child_funcs = list(set(child_funcs))
-    return child_funcs
+    return child_funcs, globals_list
 
 
 def get_cached_children(func, globals_list,
@@ -173,19 +198,7 @@ def func_calls(fct, globals_list, old_version=False):
             all_new_funcs = retrieve_all_funcs(mod)
             all_new_funcs = {key: val for key, val in all_new_funcs.items()
                              if key in n}
-            name_collisions = [key for key, val in all_new_funcs.items()
-                               if key in globals_list
-                               and val != globals_list[key]]
-            if name_collisions:
-                raise Exception('You have two functions with a name'
-                                ' collision that are not from the same module.'
-                                ' Functions in modules: ',
-                                {key: val.__module__ for key, val
-                                 in all_new_funcs.items()},
-                                'and',
-                                {key: val.__module__ for key, val
-                                 in globals_list.items()
-                                 if key in all_new_funcs})
+            check_name_collisions(globals_list, all_new_funcs)
             globals_list.update(all_new_funcs)
 
             n = [globals_list[x].__package__
@@ -214,6 +227,22 @@ def func_calls(fct, globals_list, old_version=False):
     new_globals_list = {key: val for key, val in globals_list.items()
                         if key in new_list}
     return new_list, non_callable_globals, new_globals_list
+
+
+def check_name_collisions(globals_dict1, globals_dict2):
+    name_collisions = [key for key, val in globals_dict2.items()
+                       if key in globals_dict1
+                       and val != globals_dict1[key]]
+    if name_collisions:
+        raise Exception('You have two functions with a name'
+                        ' collision that are not from the same module.'
+                        ' Functions in modules: ',
+                        {key: val.__module__ for key, val
+                         in globals_dict2.items()},
+                        'and',
+                        {key: val.__module__ for key, val
+                         in globals_dict1.items()
+                         if key in globals_dict2})
 
 
 def new_func_calls(fct, old_list, old_version):
