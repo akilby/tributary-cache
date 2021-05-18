@@ -223,51 +223,13 @@ def new_func_calls(fct, old_list, old_version):
 
 
 def get_function_calls(fct, built_ins=False, old_version=False):
-    funcs = []
     bytecode = dis.Bytecode(fct)
     instrs = list(reversed([instr for instr in bytecode]))
     if old_version:
-        for (i, inst) in enumerate(instrs):
-            if inst.opname[:13] == "CALL_FUNCTION":
-                if not inst.opname[13:16] == "_EX":
-                    if inst.opname[13:16] == "_KW":
-                        ep = i + inst.arg + 2
-                    elif inst.opname[13:16] == "_EX":
-                        pass
-                    else:
-                        ep = i + inst.arg + 1
-                    entry = instrs[ep]
-                    print(i, inst, ep, entry)
-                    name = str(entry.argval)
-                    if ("." not in name and
-                            entry.opname == "LOAD_GLOBAL" and
-                            (built_ins or
-                                not hasattr(builtins, name))):
-                        funcs.append(name)
-                    else:
-                        if not old_version and inst.opname[13:16] == "_KW":
-                            # Check next line... possibly only for _KW?
-                            # Doing that for now
-                            ep = ep + 1
-                            entry = instrs[ep]
-                            print(i, inst, ep, entry)
-                            name = str(entry.argval)
-                            if ("." not in name and
-                                    entry.opname == "LOAD_GLOBAL" and
-                                    (built_ins or
-                                        not hasattr(builtins, name))):
-                                funcs.append(name)
-        c = 0
-        for (i, inst) in enumerate(instrs):
-            if inst.opname == "CALL_FUNCTION_EX":
-                c = 1
-            if c == 1:
-                name = str(inst.argval)
-                if ("." not in name and inst.opname == "LOAD_GLOBAL" and
-                        (built_ins or not hasattr(builtins, name))):
-                    funcs.append(name)
-                    c = 0
+        funcs = get_function_calls_old_version(
+            instrs, built_ins=built_ins, old_version=old_version)
     else:
+        funcs = []
         for (i, inst) in enumerate(instrs):
             if inst.opname == "LOAD_GLOBAL":
                 funcs.append(str(inst.argval))
@@ -276,6 +238,51 @@ def get_function_calls(fct, built_ins=False, old_version=False):
     funcs = [name for name in funcs if not check_more_builtins(name)]
     funcs = [name for name in funcs if not check_external(name)]
     funcs = ordered_unique_list(funcs)
+    return funcs
+
+
+def get_function_calls_old_version(instrs, built_ins=False, old_version=False):
+    funcs = []
+    for (i, inst) in enumerate(instrs):
+        if inst.opname[:13] == "CALL_FUNCTION":
+            if not inst.opname[13:16] == "_EX":
+                if inst.opname[13:16] == "_KW":
+                    ep = i + inst.arg + 2
+                elif inst.opname[13:16] == "_EX":
+                    pass
+                else:
+                    ep = i + inst.arg + 1
+                entry = instrs[ep]
+                print(i, inst, ep, entry)
+                name = str(entry.argval)
+                if ("." not in name and
+                        entry.opname == "LOAD_GLOBAL" and
+                        (built_ins or
+                            not hasattr(builtins, name))):
+                    funcs.append(name)
+                else:
+                    if not old_version and inst.opname[13:16] == "_KW":
+                        # Check next line... possibly only for _KW?
+                        # Doing that for now
+                        ep = ep + 1
+                        entry = instrs[ep]
+                        print(i, inst, ep, entry)
+                        name = str(entry.argval)
+                        if ("." not in name and
+                                entry.opname == "LOAD_GLOBAL" and
+                                (built_ins or
+                                    not hasattr(builtins, name))):
+                            funcs.append(name)
+    c = 0
+    for (i, inst) in enumerate(instrs):
+        if inst.opname == "CALL_FUNCTION_EX":
+            c = 1
+        if c == 1:
+            name = str(inst.argval)
+            if ("." not in name and inst.opname == "LOAD_GLOBAL" and
+                    (built_ins or not hasattr(builtins, name))):
+                funcs.append(name)
+                c = 0
     return funcs
 
 
