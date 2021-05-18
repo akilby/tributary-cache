@@ -81,6 +81,7 @@ class Cache(object):
 
         func = self.__global_handler.__func__.func_name
         printn('-'*terminal_width(), self.noisily)
+        printn('* Cache directory: %s' % self.directory, self.noisily)
         printn('* Function: %s' % func, self.noisily)
 
         metadata = self.get_metadata(

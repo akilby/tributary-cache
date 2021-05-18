@@ -36,3 +36,5 @@ def try_a_print_multiplier(foo):
 ```
 
 Changing print_statement and m will *not* cause the cacher to re-run. That is handy in the first case but very bad in the second. What should I do?
+
+Remove warnings text and print statements directly?

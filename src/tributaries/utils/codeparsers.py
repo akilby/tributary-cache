@@ -138,6 +138,12 @@ def func_calls(fct, globals_list, old_version=False):
         new_list = [globals_list[x].__package__
                     if hasattr(globals_list[x], '__package__')
                     else x for x in new_list]
+        globals_list.update(
+            {globals_list[key].__package__: val
+             for key, val in globals_list.items()
+             if hasattr(globals_list[key], '__package__')
+             and globals_list[key].__package__
+             not in [key, ''] + list(globals_list.keys())})
     try:
         new_list = [x for x in new_list if globals_list[x].__name__
                     not in sys_packages]
@@ -162,6 +168,12 @@ def func_calls(fct, globals_list, old_version=False):
             n = [globals_list[x].__package__
                  if hasattr(globals_list[x], '__package__')
                  else x for x in n]
+            globals_list.update(
+                {globals_list[key].__package__: val
+                 for key, val in globals_list.items()
+                 if hasattr(globals_list[key], '__package__')
+                 and globals_list[key].__package__
+                 not in [key, ''] + list(globals_list.keys())})
             # update to allow full recursion
             n_get = [x for x in n if x not in globals_list.keys()]
             if n_get:
