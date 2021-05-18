@@ -1,4 +1,4 @@
-## Notes/upgrades ##
+## Notes/upgrades/To-do ##
 
 If function foo.bar calls blah.bar, function name conflicts will throw an error. Could use functions themselves as the dictionary key in globals_list, to prevent any conflicts in session.
 
