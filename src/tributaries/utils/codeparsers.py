@@ -215,16 +215,21 @@ def func_calls(fct, globals_list, old_version=False):
                       if hasattr(globals_list[x], '__name__')
                       and callable(globals_list[x])
                       and globals_list[x].__name__ not in sys_packages]
-        assert set(new_list_n + non_callable_globals) == set(new_list)
+        sys_packs = [x for x in new_list
+                     if hasattr(globals_list[x], '__name__')
+                     and globals_list[x].__name__ in sys_packages]
+        assert (set(new_list_n + non_callable_globals + sys_packs)
+                == set(new_list))
         new_list = new_list_n
     except AttributeError:
         print('NEW LIST: ', new_list)
         print([globals_list[x] for x in new_list])
         raise Exception('weird func calls error')
     except AssertionError:
-        raise Exception('splitting the first list of function calls into '
-                        'callables and non callables did not appear to '
-                        'capture everything')
+        raise AssertionError(
+            'splitting the first list of function calls into '
+            'system packages, callables and non callables '
+            'did not appear to capture everything')
     old_list = new_list
     old_list = functionize(old_list, globals_list)
     big_old_list = old_list
