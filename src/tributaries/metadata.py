@@ -1,5 +1,5 @@
-from tributaries.utils.codeparsers import code_tree
-from tributaries.utils.objecthashers import complex_hasher
+from .utils.codeparsers import code_tree
+from .utils.objecthashers import complex_hasher
 
 
 def determine_metadata(func, args, kwargs,
@@ -9,9 +9,10 @@ def determine_metadata(func, args, kwargs,
     metadata['func'] = func
     metadata['args'] = args
     metadata['kwargs'] = kwargs
-    metadata['code'] = code_tree(func, args, kwargs,
-                                 exclusion_list, globals_list,
-                                 old_version=old_version)
+    (metadata['code'], metadata['other_globals']) = code_tree(
+        func, args, kwargs,
+        exclusion_list, globals_list,
+        old_version=old_version)
     return refactor_metadata_for_storage(metadata)
 
 
