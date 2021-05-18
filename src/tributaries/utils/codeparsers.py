@@ -326,7 +326,8 @@ def identify_code_objects_dictcomp(bytecode, verbose=0):
             elif code.co_name in ['<setcomp>', '<listcomp>', '<genexp>']:
                 raise Exception("You may want to parse this, a setcomp, "
                                 "listcomp, or genexp, but it isn't implemented"
-                                "yet")
+                                "yet. At least listcomp should be "
+                                "straightforward.")
         except (StopIteration, TypeError):
             continue
         else:
