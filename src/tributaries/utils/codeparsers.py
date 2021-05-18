@@ -75,30 +75,30 @@ def get_all_children(func, args, kwargs,
 
     # Function calls inside the arguments list
     arg_functions = [x for x in args if isinstance(x, types.FunctionType)]
-    arg_function_names = [x.__name__ for x in arg_functions]
-    arg_children = [func_calls(x,
-                               retrieve_all_funcs(x.__module__),
-                               old_version=old_version)
-                    for x in arg_functions]
-    arg_children_globals = [x[2] for x in arg_children]
-    arg_noncallables = [x[1] for x in arg_children]
-    arg_children = [x[0] for x in arg_children]
+    (arg_function_names,
+        arg_function_fcts,
+        arg_children_globals,
+        arg_noncallables,
+        arg_children) = dependency_search(arg_functions, old_version)
 
     # Function calls inside the kwarguments list
     kwarg_functions = [val for val in kwargs.values()
                        if isinstance(val, types.FunctionType)]
-    kwarg_function_names = [val.__name__ for val in kwarg_functions]
-    kwarg_children = [func_calls(val,
-                                 retrieve_all_funcs(val.__module__),
-                                 old_version=old_version)
-                      for val in kwarg_functions]
-    kwarg_children_globals = [x[2] for x in kwarg_children]
-    kwarg_noncallables = [x[1] for x in kwarg_children]
-    kwarg_children = [x[0] for x in kwarg_children]
+    (kwarg_function_names,
+        kwarg_function_fcts,
+        kwarg_children_globals,
+        kwarg_noncallables,
+        kwarg_children) = dependency_search(kwarg_functions, old_version)
 
     # Check there are no conflicting functions in the globals lists:
     check_name_collisions(globals_list, new_globals_list)
     globals_list.update(new_globals_list)
+
+    check_name_collisions(globals_list, arg_function_fcts)
+    globals_list.update(arg_function_fcts)
+
+    check_name_collisions(globals_list, kwarg_function_fcts)
+    globals_list.update(kwarg_function_fcts)
     for new_globs in arg_children_globals + kwarg_children_globals:
         check_name_collisions(globals_list, new_globs)
         globals_list.update(new_globs)
@@ -120,6 +120,30 @@ def get_all_children(func, args, kwargs,
                      + list(itertools.chain.from_iterable(kwarg_noncallables)))
 
     return child_funcs, non_callables, globals_list
+
+
+def dependency_search(functions, old_version):
+    """
+    Takes a list of functions, probably from args or kwargs though I suppose it
+    doesn't have to be, and returns a bunch of information
+    """
+    function_names = [x.__name__ for x in functions]
+    function_child_globals = {x: retrieve_all_funcs(x.__module__)
+                              for x in functions}
+    function_fcts = {x.__name__: function_child_globals[x][x.__name__]
+                     for x in functions}
+    children = [func_calls(x,
+                           function_child_globals[x],
+                           old_version=old_version)
+                for x in functions]
+    children_globals = [x[2] for x in children]
+    noncallables = [x[1] for x in children]
+    children = [x[0] for x in children]
+    return (function_names,
+            function_fcts,
+            children_globals,
+            noncallables,
+            children)
 
 
 def get_cached_children(func, globals_list,
