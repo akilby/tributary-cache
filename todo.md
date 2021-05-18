@@ -20,3 +20,8 @@ like PD_FUNCT in utils
 * Unclear how functions in the other_globals will work, whether it will mess up the comparison
 
 * Should have a way to track/collect all cached files in a single run
+
+* Figure out exactly how I'm distinguishing between user-written and installed from other sources (including Pandas). check_external and get_system_packages are doing the work, but it seems like these can't distinguish between user-written and external if it hasn't been installed using the editable flag:
+```bash
+pip install -e .
+```
