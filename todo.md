@@ -40,3 +40,5 @@ Changing print_statement and m will *not* cause the cacher to re-run. That is ha
 Remove warnings text and print statements directly?
 
 Finish adding non-callable globals to storage
+
+Make sure to go back and verify name conflicts throw an error

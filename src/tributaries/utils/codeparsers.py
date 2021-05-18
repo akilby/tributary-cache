@@ -66,18 +66,20 @@ def remove_all_docstrings_from_metadata(m):
 def get_all_children(func, args, kwargs,
                      exclusion_list, globals_list,
                      old_version=False):
-    child_funcs, non_callable_globals = func_calls(
+    child_funcs, non_callable_globals, new_globals_list = func_calls(
         globals_list[func], globals_list, old_version=old_version)
-    arg_children = [[x.__name__]
-                    + func_calls(x, globals_list, old_version=old_version)
+    print('are globals_list and new_globals_list the same?', globals_list == new_globals_list)
+    arg_functions = [x for x in args if isinstance(x, types.FunctionType)]
+    arg_function_names = [x.__name__ for x in arg_functions]
+    arg_children = [func_calls(x, globals_list, old_version=old_version)
                     for x in args
                     if isinstance(x, types.FunctionType)]
     child_funcs = child_funcs + list(
         itertools.chain.from_iterable(arg_children))
-    kwarg_children = [[x[1].__name__]
-                      + func_calls(x[1], globals_list, old_version=old_version)
-                      for x in kwargs.items()
-                      if isinstance(x[1], types.FunctionType)]
+    kwarg_functions = [val for val in kwargs.values() if isinstance(val, types.FunctionType)]
+    kwarg_function_names = [val.__name__ for val in kwarg_functions]
+    kwarg_children = [func_calls(val, globals_list, old_version=old_version)
+                      for val in kwarg_functions]
     child_funcs = child_funcs + list(
         itertools.chain.from_iterable(kwarg_children))
     child_funcs = child_funcs + get_cached_children(func, globals_list)
@@ -209,7 +211,9 @@ def func_calls(fct, globals_list, old_version=False):
         big_old_list = old_list + big_old_list
         new_list = ordered_unique_list(new_list)
         non_callable_globals = ordered_unique_list(non_callable_globals)
-    return new_list, non_callable_globals, globals_list
+    new_globals_list = {key: val for key, val in globals_list.items()
+                        if key in new_list}
+    return new_list, non_callable_globals, new_globals_list
 
 
 def new_func_calls(fct, old_list, old_version):
