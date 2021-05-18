@@ -30,6 +30,6 @@ If function `clean_my_data` is registered, the first run will be time-consuming,
 
 Dependency functions such `time_consuming_cleaning_process1` can be themselves registered, to save time while working on intermediate cleaning steps. Whether or not they are not registered, changes to their code will still prompt `clean_my_data` to re-run if called.
 
-Built-in functions, functions from system packages, and functions from other installed packages are not searched as dependencies.
+Built-in functions, functions from system packages, and functions from other installed packages are excluded as dependencies.
 
 
