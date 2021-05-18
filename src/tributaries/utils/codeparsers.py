@@ -23,7 +23,8 @@ def code_tree(func, args, kwargs,
                                                  old_version=old_version)
     code = {f: get_source(f, updated_globals_list)
             for f in [func] + child_funcs}
-    return code
+    non_callables_dict = {x: updated_globals_list[x] for x in non_callables}
+    return code, non_callables_dict
 
 
 def get_source(func, globals_list, remove_docs=True):
