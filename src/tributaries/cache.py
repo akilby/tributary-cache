@@ -113,7 +113,8 @@ class Cache(object):
                                       self.exclusion_list, self.globals_list,
                                       old_version=old_version)
         printn('* Metadata: %s '
-               % refactor_metadata_for_readability(metadata), self.noisily)
+               % refactor_metadata_for_readability(metadata.deepcopy()),
+               self.noisily)
         printn('* (identified) Called functions: %s'
                % list(metadata['code'].keys()), self.noisily)
 
