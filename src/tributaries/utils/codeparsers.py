@@ -208,13 +208,22 @@ def func_calls(fct, globals_list, old_version=False):
                            not in [key, ''] + list(globals_list.keys())}
         globals_list.update(package_aliases)
     try:
-        new_list = [x for x in new_list if globals_list[x].__name__
-                    not in sys_packages]
+        non_callable_globals = [x for x in new_list
+                                if not hasattr(globals_list[x], '__name__')
+                                and not callable(globals_list[x])]
+        new_list_n = [x for x in new_list
+                      if hasattr(globals_list[x], '__name__')
+                      and callable(globals_list[x])
+                      and globals_list[x].__name__ not in sys_packages]
+        assert set(new_list_n + non_callable_globals) == set(new_list)
     except AttributeError:
         print('NEW LIST: ', new_list)
         print([globals_list[x] for x in new_list])
         raise Exception('weird func calls error')
-    non_callable_globals = []
+    except AssertionError:
+        raise Exception('splitting the first list of function calls into '
+                        'callables and non callables did not appear to '
+                        'capture everything')
     old_list = new_list
     old_list = functionize(old_list, globals_list)
     big_old_list = old_list
