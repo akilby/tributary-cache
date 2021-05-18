@@ -11,7 +11,7 @@ It is transparent and portable, in that metadata and the outputs of the function
 
 It's still kludgy, but very handy, especially for data science workflows. If you have scripts that process data, you can wrap them in a function, register the function, and the cacher will save to disk and retrieve it whenever you need it, eliminating the need for many poorly-named saved files produced by intermediate steps of data cleaning or processing.
 
-Warning: this package does its best to search for all functions called by the memoized function, but it does not yet work perfectly. To be safe, you should
+Warning: this package does its best to search for all functions called by the memoized function, but it does not yet work perfectly. To be safe, you can set the rerun flag to True at the end of the project, and it will rerun everything from scratch. (Alternatively, this can be done by pointing the cacher to a fresh cache directory with no files)
 
 
 ```python
@@ -30,28 +30,5 @@ If function `clean_my_data` is registered, the first run will be time-consuming,
 
 Dependency functions such `time_consuming_cleaning_process1` can be themselves registered, to save time while working on intermediate cleaning steps. Whether or not they are not registered, changes to their code will still prompt `clean_my_data` to re-run if called.
 
-
-
-## Command Line Setup - Deprecated version of package ##
-
-This package comes with a command line utility to facilitate set up:
-
-`cache configure`
-
-This will prompt you to:
-1. Set the directory on disk where caches will be stored
-2. Provide a list of user-written packages for registry with the cacher
-3. Specify which submodules of the packages to register
-	(on first run, specifying 'n' at "Prompt submodules?" will register all submodules)
-
-
-If you instantiate a Cache object, you can call any registered function as a method of the cache instance:
-
-```
-c = cache.Cache()
-
-out = c.foo(args)
-```
-Note that the registered function `foo` also remains a regular function and does not *need* to be memoized.
 
 
