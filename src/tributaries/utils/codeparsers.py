@@ -216,6 +216,7 @@ def func_calls(fct, globals_list, old_version=False):
                       and callable(globals_list[x])
                       and globals_list[x].__name__ not in sys_packages]
         assert set(new_list_n + non_callable_globals) == set(new_list)
+        new_list = new_list_n
     except AttributeError:
         print('NEW LIST: ', new_list)
         print([globals_list[x] for x in new_list])
@@ -270,7 +271,7 @@ def func_calls(fct, globals_list, old_version=False):
         new_list = ordered_unique_list(new_list)
         non_callable_globals = ordered_unique_list(non_callable_globals)
     new_globals_list = {key: val for key, val in globals_list.items()
-                        if key in new_list}
+                        if key in new_list + non_callable_globals}
     return new_list, non_callable_globals, new_globals_list
 
 
