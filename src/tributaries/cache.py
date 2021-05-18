@@ -126,29 +126,31 @@ class Cache(object):
         return id_
 
     def load_id(self, id_):
-        try:
-            printn('* Cache found - loading from ID %s:' % id_, self.noisily)
-            output = pickle_read(os.path.join(self.directory,
-                                              'output_%s.pkl' % id_))
-            printn('* Cache successfully loaded', self.noisily)
-            return id_, output
-        except EOFError:
-            print('%s: Ran out of input' % EOFError.__name__)
-            self.purge_id(self, id_)
-            id_, output = None, None
-        except AttributeError:
+        if id_:
             try:
-                printn('Using alternate pandas pickle loader for'
-                       ' backwards compatibility', self.noisily)
-                output = pd.read_pickle(os.path.join(self.directory,
-                                                     'output_%s.pkl' % id_))
+                printn('* Cache found - loading from ID %s:' % id_, self.noisily)
+                output = pickle_read(os.path.join(self.directory,
+                                                  'output_%s.pkl' % id_))
                 printn('* Cache successfully loaded', self.noisily)
                 return id_, output
-            except UnpicklingError:
-                raise Exception(UnpicklingError)
-        except FileNotFoundError:
-            id_, output = None, None
-        return id_, output
+            except EOFError:
+                print('%s: Ran out of input' % EOFError.__name__)
+                self.purge_id(self, id_)
+                id_, output = None, None
+            except AttributeError:
+                try:
+                    printn('Using alternate pandas pickle loader for'
+                           ' backwards compatibility', self.noisily)
+                    output = pd.read_pickle(os.path.join(self.directory,
+                                                         'output_%s.pkl' % id_))
+                    printn('* Cache successfully loaded', self.noisily)
+                    return id_, output
+                except UnpicklingError:
+                    raise Exception(UnpicklingError)
+            except FileNotFoundError:
+                id_, output = None, None
+            return id_, output
+        return None, None
 
     def run_function(self, func, args, kwargs, metadata,
                      move_file_in_position):
