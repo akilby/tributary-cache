@@ -33,7 +33,8 @@ def refactor_metadata_for_readability(metadata):
         elif isinstance(val, dict):
             for key1, val1 in val.items():
                 if isinstance(val1, list) and len(val1) > 100:
-                    kwargs[val][key1] = val1[:100] + ['...', '-kwarg snipped-']
+                    val[key1] = val1[:100] + ['...', '-kwarg snipped-']
+                    kwargs[key] = val
     other_globals = m['other_globals']
     for key, val in other_globals.items():
         if isinstance(val, list) and len(val) > 100:
