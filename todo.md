@@ -42,3 +42,8 @@ Remove warnings text and print statements directly?
 Finish adding non-callable globals to storage
 
 Make sure to go back and verify name conflicts throw an error
+
+a dictionary read in as a non-callable global can have functions inside that are not included in the code
+like PD_FUNCT in utils
+
+unclear how functions in the other_globals will work, whether it will mess up the comparison

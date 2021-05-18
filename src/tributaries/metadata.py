@@ -9,10 +9,12 @@ def determine_metadata(func, args, kwargs,
     metadata['func'] = func
     metadata['args'] = args
     metadata['kwargs'] = kwargs
-    (metadata['code'], metadata['other_globals']) = code_tree(
-        func, args, kwargs,
-        exclusion_list, globals_list,
-        old_version=old_version)
+    (metadata['code'],
+        metadata['other_globals']) = code_tree(func, args, kwargs,
+                                               exclusion_list, globals_list,
+                                               old_version=old_version)
+    if old_version:
+        metadata.pop('other_globals')
     return refactor_metadata_for_storage(metadata)
 
 
