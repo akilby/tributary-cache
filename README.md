@@ -11,12 +11,12 @@ It is transparent and portable, in that metadata and the outputs of the function
 
 It's still kludgy, but very handy, especially for data science workflows. If you have scripts that process data, you can wrap them in a function, register the function, and the cacher will save to disk and retrieve it whenever you need it, eliminating the need for many poorly-named saved files produced by intermediate steps of data cleaning or processing.
 
-Warning: this package does its best to search for all functions called by the memoized function, but it does not yet work perfectly. For example, some functions called inside a class don't seem to be recognized.
+Warning: this package does its best to search for all functions called by the memoized function, but it does not yet work perfectly. To be safe, you should
 
 
 ```python
 from tributaries import Cacher
-cacher = Cacher(directory='/path/to/cache/directory/', verbose=0)
+cacher = Cacher(directory='/path/to/cache/directory/', verbose=0, rerun=False)
 
 
 @cacher.register

@@ -12,7 +12,8 @@ class Cacher(object):
                  configure_disk=None,
                  directory=None,
                  exclusion_list=[],
-                 verbose=0):
+                 verbose=0,
+                 rerun=False):
 
         """
         Users should be able to declare, or use default temp directory
@@ -34,6 +35,7 @@ class Cacher(object):
         self.directory = directory
         self.exclusion_list = exclusion_list
         self.noisily = False if verbose == 0 else True
+        self.rerun = rerun
 
         if not os.path.isdir(self.directory):
             os.mkdir(self.directory)
@@ -54,6 +56,7 @@ class Cacher(object):
                                        'registry': [module_to_import],
                                        'exclusion_list': self.exclusion_list},
                             noisily=self.noisily,
+                            rerun=self.rerun,
                             old_version=False)
 
             return getattr(c, function.__code__.co_name)(*args, **kwargs)
