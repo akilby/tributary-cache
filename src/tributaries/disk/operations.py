@@ -2,8 +2,9 @@ import glob
 import os
 import shutil
 import warnings
-from ..utils.utils import pickle_dump, pickle_read
+
 from ..utils.codeparsers import remove_all_docstrings_from_metadata
+from ..utils.utils import pickle_dump, pickle_read
 
 
 def cache_to_disk(directory,
@@ -63,6 +64,9 @@ def search_cache(directory, metadata):
         except ModuleNotFoundError as m:
             print('%s has created some problem' % item)
             raise Exception(ModuleNotFoundError.__name__, ": ", m.args[0])
+        except EOFError as eof:
+            print('%s has created some problem' % item)
+            raise Exception(EOFError.__name__, ": ", eof.args[0])
         try:
             if remove_all_docstrings_from_metadata(meta) == metadata:
                 id_ = os.path.basename(item)
