@@ -22,6 +22,7 @@ definitely does not work perfectly
 For example most things called inside a class like RunScript don't
 seem to stick
 """
+import copy
 import os
 import time
 from pickle import UnpicklingError
@@ -113,7 +114,7 @@ class Cache(object):
                                       self.exclusion_list, self.globals_list,
                                       old_version=old_version)
         printn('* Metadata: %s '
-               % refactor_metadata_for_readability(metadata.deepcopy()),
+               % refactor_metadata_for_readability(copy.deepcopy(metadata)),
                self.noisily)
         printn('* (identified) Called functions: %s'
                % list(metadata['code'].keys()), self.noisily)
