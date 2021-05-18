@@ -138,12 +138,12 @@ def func_calls(fct, globals_list, old_version=False):
         new_list = [globals_list[x].__package__
                     if hasattr(globals_list[x], '__package__')
                     else x for x in new_list]
-        globals_list.update(
-            {globals_list[key].__package__: val
-             for key, val in globals_list.items()
-             if hasattr(globals_list[key], '__package__')
-             and globals_list[key].__package__
-             not in [key, ''] + list(globals_list.keys())})
+        package_aliases = {globals_list[key].__package__: val
+                           for key, val in globals_list.items()
+                           if hasattr(globals_list[key], '__package__')
+                           and globals_list[key].__package__
+                           not in [key, ''] + list(globals_list.keys())}
+        globals_list.update(package_aliases)
     try:
         new_list = [x for x in new_list if globals_list[x].__name__
                     not in sys_packages]
@@ -157,41 +157,59 @@ def func_calls(fct, globals_list, old_version=False):
     big_old_list = old_list
     while old_list != []:
         mod = old_list[0].__module__
-        n = new_func_calls(
-            old_list[0], big_old_list, old_version=old_version)
+
         if old_version:
             # This is where a non-registered function gets dropped
+            n = new_func_calls(
+                old_list[0], big_old_list, old_version=old_version)
             n = [x for x in n if x in globals_list.keys()
                  and globals_list[x].__name__
                  not in sys_packages]
         else:
+            # update to allow full recursion
+            n = get_function_calls(old_list[0], old_version=old_version)
+            all_new_funcs = retrieve_all_funcs(mod)
+            all_new_funcs = {key: val for key, val in all_new_funcs.items()
+                             if key in n}
+            name_collisions = [key for key, val in all_new_funcs.items()
+                               if key in globals_list
+                               and val != globals_list[key]]
+            if name_collisions:
+                raise Exception('You have two functions with a name'
+                                ' collision that are not from the same module.'
+                                ' Functions in modules: ',
+                                {key: val.__module__ for key, val
+                                 in all_new_funcs.items()},
+                                'and',
+                                {key: val.__module__ for key, val
+                                 in globals_list.items()
+                                 if key in all_new_funcs})
+            globals_list.update(all_new_funcs)
+
             n = [globals_list[x].__package__
                  if hasattr(globals_list[x], '__package__')
                  else x for x in n]
-            globals_list.update(
-                {globals_list[key].__package__: val
-                 for key, val in globals_list.items()
-                 if hasattr(globals_list[key], '__package__')
-                 and globals_list[key].__package__
-                 not in [key, ''] + list(globals_list.keys())})
-            # update to allow full recursion
-            n_get = [x for x in n if x not in globals_list.keys()]
-            if n_get:
-                # should add verbosity here
-                # print('adding to globals_list by recursion')
-                all_funcs = retrieve_all_funcs(mod)
-                globals_list.update(all_funcs)
+            package_aliases = {globals_list[key].__package__: val
+                               for key, val in globals_list.items()
+                               if hasattr(globals_list[key], '__package__')
+                               and globals_list[key].__package__
+                               not in [key, ''] + list(globals_list.keys())}
+            globals_list.update(package_aliases)
 
             n = [x for x in n if x in globals_list.keys()]
-            non_callable = [x for x in n if not callable(globals_list[x])]
-            n = [x for x in n if callable(globals_list[x])]
+            non_callable = [x for x in n
+                            if not callable(globals_list[x])
+                            and not hasattr(globals_list[x], '__package__')]
+            n = [x for x in n if x not in non_callable]
             n = [x for x in n if globals_list[x].__name__ not in sys_packages]
             non_callable_globals = non_callable_globals + non_callable
 
         new_list = new_list + n
         old_list = old_list[1:] + functionize(n, globals_list)
         big_old_list = old_list + big_old_list
-    return new_list, non_callable_globals
+        new_list = ordered_unique_list(new_list)
+        non_callable_globals = ordered_unique_list(non_callable_globals)
+    return new_list, non_callable_globals, globals_list
 
 
 def new_func_calls(fct, old_list, old_version):
