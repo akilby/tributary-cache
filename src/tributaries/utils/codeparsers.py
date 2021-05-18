@@ -4,13 +4,15 @@ import importlib
 import inspect
 import itertools
 import types
+from inspect import iscode
+from itertools import groupby
 
 import dill
 from stdlib_list import stdlib_list
 from undecorated import undecorated
 
 from .globalslister import retrieve_all_funcs
-from .utils import get_system_packages, ordered_unique_list
+from .utils import get_system_packages, ordered_unique_list, printn
 
 
 def code_tree(func, args, kwargs,
@@ -292,15 +294,59 @@ def get_function_calls(fct, built_ins=False, old_version=False):
         funcs = get_function_calls_old_version(
             instrs, built_ins=built_ins, old_version=old_version)
     else:
-        funcs = []
-        for (i, inst) in enumerate(instrs):
-            if inst.opname == "LOAD_GLOBAL":
-                funcs.append(str(inst.argval))
+        funcs = get_load_globals(instrs)
+
+    dictcomps = identify_code_objects_dictcomp(bytecode)
+    for code in dictcomps:
+        bytecode = dis.Bytecode(code)
+        instrs = list(reversed([instr for instr in bytecode]))
+        funcs.append(get_load_globals(instrs))
 
     funcs = [name for name in funcs if not hasattr(builtins, name)]
     funcs = [name for name in funcs if not check_more_builtins(name)]
     funcs = [name for name in funcs if not check_external(name)]
     funcs = ordered_unique_list(funcs)
+    return funcs
+
+
+def identify_code_objects_dictcomp(bytecode, verbose=0):
+    def _group(i):
+        if i.starts_line is not None:
+            _group.starts = i
+        return _group.starts
+
+    dictcomps = []
+    for _, iset in groupby(bytecode, _group):
+        iset = list(iset)
+        try:
+            code = next(arg.argval for arg in iset if iscode(arg.argval))
+            # Skip <setcomp>, <dictcomp>, <listcomp> or <genexp>
+            if code.co_name == '<dictcomp>':
+                dictcomps.append(code)
+            elif code.co_name in ['<setcomp>', '<listcomp>', '<genexp>']:
+                raise Exception("You may want to parse this, a setcomp, "
+                                "listcomp, or genexp, but it isn't implemented"
+                                "yet")
+        except (StopIteration, TypeError):
+            continue
+        else:
+            noisily = False if verbose == 0 else True
+            if any(x.opname == 'LOAD_BUILD_CLASS' for x in iset):
+                printn((code,
+                       'represents a function {!r}'.format(code.co_name)),
+                       noisily)
+            else:
+                printn((code,
+                        'represents a class {!r}'.format(code.co_name)),
+                       noisily)
+    return dictcomps
+
+
+def get_load_globals(instrs):
+    funcs = []
+    for (i, inst) in enumerate(instrs):
+        if inst.opname == "LOAD_GLOBAL":
+            funcs.append(str(inst.argval))
     return funcs
 
 
