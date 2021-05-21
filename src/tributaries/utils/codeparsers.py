@@ -214,11 +214,17 @@ def func_calls(fct, globals_list, old_version=False):
         new_list_n = [x for x in new_list
                       if hasattr(globals_list[x], '__name__')
                       and callable(globals_list[x])
-                      and globals_list[x].__name__ not in sys_packages]
+                      and globals_list[x].__name__ not in sys_packages
+                      and not isinstance(globals_list[x],
+                                         types.BuiltinFunctionType)]
         sys_packs = [x for x in new_list
                      if hasattr(globals_list[x], '__name__')
                      and globals_list[x].__name__ in sys_packages]
-        assert (set(new_list_n + non_callable_globals + sys_packs)
+        builtin_check = [x for x in new_list
+                         if isinstance(globals_list[x],
+                                       types.BuiltinFunctionType)]
+        assert (set(new_list_n + non_callable_globals
+                    + sys_packs + builtin_check)
                 == set(new_list))
         new_list = new_list_n
     except AttributeError:
