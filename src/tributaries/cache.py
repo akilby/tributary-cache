@@ -130,7 +130,8 @@ class Cache(object):
     def load_id(self, id_):
         if id_:
             try:
-                printn('* Cache found - loading from ID %s:' % id_, self.noisily)
+                printn('* Cache found - loading from ID %s:' % id_,
+                       self.noisily)
                 output = pickle_read(os.path.join(self.directory,
                                                   'output_%s.pkl' % id_))
                 printn('* Cache successfully loaded', self.noisily)
@@ -143,8 +144,8 @@ class Cache(object):
                 try:
                     printn('Using alternate pandas pickle loader for'
                            ' backwards compatibility', self.noisily)
-                    output = pd.read_pickle(os.path.join(self.directory,
-                                                         'output_%s.pkl' % id_))
+                    output = pd.read_pickle(
+                        os.path.join(self.directory, 'output_%s.pkl' % id_))
                     printn('* Cache successfully loaded', self.noisily)
                     return id_, output
                 except UnpicklingError:
