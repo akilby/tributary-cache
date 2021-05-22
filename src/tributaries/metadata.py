@@ -26,10 +26,16 @@ def refactor_metadata_for_readability(metadata):
     args = [(arg[:100] + ['...', '-args snipped-']
              if isinstance(arg, list) and len(arg) > 100 else arg)
             for arg in args]
+    args = [(set(list(arg)[:20]).union(set(['...', '-args snipped-']))
+             if isinstance(arg, set) and len(arg) > 20 else arg)
+            for arg in args]
     kwargs = m['kwargs']
     for key, val in kwargs.items():
         if isinstance(val, list) and len(val) > 100:
             kwargs[key] = val[:100] + ['...', '-kwarg snipped-']
+        elif isinstance(val, set) and len(val) > 20:
+            kwargs[key] = set(list(val)[:20]).union(
+                set(['...', '-kwarg snipped-']))
         elif isinstance(val, dict):
             for key1, val1 in val.items():
                 if isinstance(val1, list) and len(val1) > 100:
