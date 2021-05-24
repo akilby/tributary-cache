@@ -309,6 +309,8 @@ def new_func_calls(fct, old_list, old_version):
 
 
 def get_function_calls(fct, built_ins=False, old_version=False):
+    if isinstance(fct, types.BuiltinFunctionType):
+        return []
     bytecode = dis.Bytecode(fct)
     instrs = list(reversed([instr for instr in bytecode]))
     if old_version:
