@@ -428,7 +428,8 @@ def functionize(li, g):
         it = globals_list[item]
         if inspect.isclass(it):
             return_list = return_list + get_class_calls(it)
-        elif inspect.isfunction(it) or inspect.ismodule(it):
+        elif (inspect.isfunction(it) or inspect.ismodule(it)
+              or isinstance(it, types.BuiltinFunctionType)):
             return_list = return_list + [it]
         else:
             raise Exception('passed a non-class, non-function, confused')
