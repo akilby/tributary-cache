@@ -1,6 +1,7 @@
 import functools
 import os
 import tempfile
+import time
 import warnings
 
 from .config import get_config_package
@@ -58,11 +59,15 @@ class Cacher(object):
                             noisily=self.noisily,
                             rerun=self.rerun,
                             old_version=False)
-
-            return getattr(c, function.__code__.co_name)(*args, **kwargs)
+            start = time.time()
+            output = getattr(c, function.__code__.co_name)(*args, **kwargs)
+            end = time.time()
+            self.last_call_time = (start, end, start-end)
+            return output
 
         wrapper.is_cacher_registered = True
         wrapper.bare_func = function
         wrapper.cacher_directory = self.directory
+        wrapper.last_call_time = self.last_call_time
 
         return wrapper
