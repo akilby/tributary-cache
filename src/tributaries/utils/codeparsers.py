@@ -277,6 +277,8 @@ def func_calls(fct, globals_list, old_version=False):
             non_callable_globals = non_callable_globals + non_callable
 
         new_list = new_list + n
+        old_list = [x for x in old_list if not (hasattr(x, '__package__')
+                    and check_external(x.__package__))]
         old_list = old_list[1:] + functionize(n, globals_list)
         big_old_list = old_list + big_old_list
         new_list = ordered_unique_list(new_list)
