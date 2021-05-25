@@ -37,7 +37,6 @@ class Cacher(object):
         self.exclusion_list = exclusion_list
         self.noisily = False if verbose == 0 else True
         self.rerun = rerun
-        self.last_call_time = (0, 0, 0)
 
         if not os.path.isdir(self.directory):
             os.mkdir(self.directory)
@@ -63,12 +62,11 @@ class Cacher(object):
             start = time.time()
             output = getattr(c, function.__code__.co_name)(*args, **kwargs)
             end = time.time()
-            self.last_call_time = (start, end, start-end)
+            print("Time elapsed: ", start-end)
             return output
 
         wrapper.is_cacher_registered = True
         wrapper.bare_func = function
         wrapper.cacher_directory = self.directory
-        wrapper.last_call_time = self.last_call_time
 
         return wrapper
