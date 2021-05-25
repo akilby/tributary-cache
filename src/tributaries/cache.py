@@ -157,6 +157,7 @@ class Cache(object):
 
     def run_function(self, func, args, kwargs, metadata,
                      move_file_in_position):
+        start = time.time()
         printn('* Cache not found; running', self.noisily)
         output = self.globals_list[func](*args, **kwargs)
         id_ = '%s' % round(time.time()*1000000)
@@ -164,6 +165,7 @@ class Cache(object):
         output = cache_to_disk(self.directory, id_, metadata,
                                output, move_file_in_position)
         self.counter_update(id_)
+        printn('* Runtime: ', time.time()-start, self.noisily)
         return id_, output
 
     def handle_counter(self):

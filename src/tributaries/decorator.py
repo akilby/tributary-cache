@@ -1,7 +1,6 @@
 import functools
 import os
 import tempfile
-import time
 import warnings
 
 from .config import get_config_package
@@ -59,11 +58,8 @@ class Cacher(object):
                             noisily=self.noisily,
                             rerun=self.rerun,
                             old_version=False)
-            start = time.time()
-            output = getattr(c, function.__code__.co_name)(*args, **kwargs)
-            end = time.time()
-            print("Time elapsed: ", start-end)
-            return output
+
+            return getattr(c, function.__code__.co_name)(*args, **kwargs)
 
         wrapper.is_cacher_registered = True
         wrapper.bare_func = function
