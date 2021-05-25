@@ -22,3 +22,5 @@ like PD_FUNCT in utils
 * Should have a way to track/collect all cached files in a single run
 
 * Figure out exactly how I'm distinguishing between user-written and installed from other sources (including, e.g., pandas). check_external and get_system_packages are doing the work, but it seems like these can't distinguish between user-written and external if it hasn't been installed using the editable flag: `pip install -e .`
+
+* The cacher cannot tell a function is a dependency if it is defined inside the function (not a problem as the code is part of the function), or if it is imported inside the function (this can be a problem)
