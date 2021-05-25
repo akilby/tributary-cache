@@ -23,34 +23,41 @@ def refactor_metadata_for_readability(metadata):
     code = m['code']
     code = {k: '-code snipped-' for k, v in code.items()}
     args = m['args']
-    args = [(arg[:100] + ['...', '-args snipped-']
-             if isinstance(arg, list) and len(arg) > 100 else arg)
+    args = [(arg[:20] + ['...', '-args snipped-']
+             if isinstance(arg, list) and len(arg) > 20 else arg)
             for arg in args]
     args = [(set(list(arg)[:20]).union(set(['...', '-args snipped-']))
              if isinstance(arg, set) and len(arg) > 20 else arg)
             for arg in args]
+    args = [dict_refactor(arg) if isinstance(arg, dict) else arg
+            for arg in args]
     kwargs = m['kwargs']
-    for key, val in kwargs.items():
-        if isinstance(val, list) and len(val) > 100:
-            kwargs[key] = val[:100] + ['...', '-kwarg snipped-']
-        elif isinstance(val, set) and len(val) > 20:
-            kwargs[key] = set(list(val)[:20]).union(
-                set(['...', '-kwarg snipped-']))
-        elif isinstance(val, dict):
-            for key1, val1 in val.items():
-                if isinstance(val1, list) and len(val1) > 100:
-                    val[key1] = val1[:100] + ['...', '-kwarg snipped-']
-                    kwargs[key] = val
+    kwargs = dict_refactor(kwargs)
     other_globals = m['other_globals']
     for key, val in other_globals.items():
-        if isinstance(val, list) and len(val) > 100:
-            other_globals[key] = val[:100] + ['...', '-other_globals snipped-']
+        if isinstance(val, list) and len(val) > 20:
+            other_globals[key] = val[:20] + ['...', '-other_globals snipped-']
     m2 = metadata.copy()
     m2['code'] = code
     m2['args'] = args
     m2['kwargs'] = kwargs
     m2['other_globals'] = other_globals
     return m2
+
+
+def dict_refactor(kwargs):
+    for key, val in kwargs.items():
+        if isinstance(val, list) and len(val) > 20:
+            kwargs[key] = val[:20] + ['...', '-snipped-']
+        elif isinstance(val, set) and len(val) > 20:
+            kwargs[key] = set(list(val)[:20]).union(
+                set(['...', '-snipped-']))
+        elif isinstance(val, dict):
+            for key1, val1 in val.items():
+                if isinstance(val1, list) and len(val1) > 20:
+                    val[key1] = val1[:20] + ['...', '-snipped-']
+                    kwargs[key] = val
+    return kwargs
 
 
 def refactor_metadata_for_storage(metadata):
