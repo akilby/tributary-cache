@@ -1,5 +1,7 @@
 import hashlib
 import importlib
+import pickle
+import tempfile
 
 packages_list = []
 
@@ -65,3 +67,19 @@ def complex_hasher(obj):
         hasher_count += 1
     assert hasher_count == 1
     return out
+
+
+def unique_serialization(obj):
+    """
+    Checks whether obj is serialized in a fashion that produces a
+    unique representation. If this returns false, cacher will always conclude
+    that any function with obj as an argument is fresh
+
+    Returns examples of the object in pre-and-post pickled form
+    """
+    with tempfile.NamedTemporaryFile() as tmp_file:
+        pickle.dump(obj, tmp_file)
+        tmp_file.flush()
+
+        new_obj = pickle.load(open(tmp_file.name, 'rb'))
+        return obj == new_obj, obj, new_obj
