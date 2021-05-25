@@ -37,6 +37,7 @@ class Cacher(object):
         self.exclusion_list = exclusion_list
         self.noisily = False if verbose == 0 else True
         self.rerun = rerun
+        self.last_call_time = (0, 0, 0)
 
         if not os.path.isdir(self.directory):
             os.mkdir(self.directory)
