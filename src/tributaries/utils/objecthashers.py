@@ -1,7 +1,10 @@
+import copy
 import hashlib
 import importlib
 import pickle
 import tempfile
+
+from utils.utils import flattener
 
 packages_list = []
 
@@ -19,6 +22,11 @@ if importlib.util.find_spec('scipy'):
     import scipy.sparse as sp
 
 
+if importlib.util.find_spec('sklearn'):
+    packages_list.append('sklearn')
+    from sklearn.decomposition.online_lda import LatentDirichletAllocation
+
+
 def hash_csr_matrix(matrix):
     return (
         str(matrix.shape) +
@@ -30,6 +38,14 @@ def hash_csr_matrix(matrix):
 
 def hash_numpy_array(obj):
     return hashlib.sha1(np.ascontiguousarray(obj)).hexdigest()
+
+
+def serializable_lda_object(obj):
+    attribute_dict = copy.deepcopy(vars(obj))
+    attribute_dict['random_state_'] = obj.random_state_.get_state()
+    flat_attribute_dict = flattener(attribute_dict)
+    assert unique_serialization(flat_attribute_dict)[0]
+    return flat_attribute_dict
 
 
 def complex_hasher(obj):
@@ -62,6 +78,11 @@ def complex_hasher(obj):
         if isinstance(obj, np.ndarray):
             out = hash_numpy_array(obj)
             hasher_count += 1
+    if 'sklearn' in packages_list:
+        if isinstance(obj, LatentDirichletAllocation):
+            if not unique_serialization(obj)[0]:
+                out = serializable_lda_object(obj)
+                hasher_count += 1
     if hasher_count == 0:
         out = obj
         hasher_count += 1
@@ -82,4 +103,23 @@ def unique_serialization(obj):
         tmp_file.flush()
 
         new_obj = pickle.load(open(tmp_file.name, 'rb'))
-        return obj == new_obj, obj, new_obj
+        cond = obj == new_obj
+        return cond, obj, new_obj
+
+
+def detect_problems_in_serialization(obj):
+    """
+    Runs through writeable attributes looking for cases
+    where serialization produces a non-stable result
+    """
+    cond, obj1, obj2 = unique_serialization(obj)
+    if not cond:
+        assert vars(obj1).keys() == vars(obj2).keys()
+        for key, val in vars(obj1).items():
+            try:
+                cond = vars(obj2)[key] != val
+                assert isinstance(cond, bool)
+            except AssertionError:
+                cond = (vars(obj2)[key] != val).any()
+            if cond:
+                return key, val, vars(obj2)[key]
