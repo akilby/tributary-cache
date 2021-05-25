@@ -25,6 +25,7 @@ if importlib.util.find_spec('scipy'):
 if importlib.util.find_spec('sklearn'):
     packages_list.append('sklearn')
     from sklearn.decomposition.online_lda import LatentDirichletAllocation
+    from sklearn.feature_extraction.text import CountVectorizer
 
 
 def hash_csr_matrix(matrix):
@@ -45,8 +46,15 @@ def serializable_lda_object(obj):
     attribute_dict['random_state_'] = obj.random_state_.get_state()
     flat_attribute_dict = flattener(attribute_dict)
     assert unique_serialization(flat_attribute_dict)[0]
-    print('Attempting to uniquely serialize an LDA object')
+    print('Warning: Attempting to uniquely serialize an LDA object')
     return flat_attribute_dict
+
+
+def serializable_vectorizer_object(obj):
+    attribute_dict = copy.deepcopy(vars(obj))
+    assert unique_serialization(attribute_dict)[0]
+    print('Warning: Attempting to uniquely serialize an vectorizer object')
+    return attribute_dict
 
 
 def complex_hasher(obj):
@@ -83,6 +91,10 @@ def complex_hasher(obj):
         if isinstance(obj, LatentDirichletAllocation):
             if not unique_serialization(obj)[0]:
                 out = serializable_lda_object(obj)
+                hasher_count += 1
+        if isinstance(obj, CountVectorizer):
+            if not unique_serialization(obj)[0]:
+                out = serializable_vectorizer_object(obj)
                 hasher_count += 1
     if hasher_count == 0:
         out = obj
