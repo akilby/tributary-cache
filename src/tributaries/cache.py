@@ -165,7 +165,7 @@ class Cache(object):
         output = cache_to_disk(self.directory, id_, metadata,
                                output, move_file_in_position)
         self.counter_update(id_)
-        printn('* Runtime: ', time.time()-start, self.noisily)
+        printn('* Runtime: %s' % time.time()-start, self.noisily)
         return id_, output
 
     def handle_counter(self):
