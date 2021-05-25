@@ -46,14 +46,15 @@ def serializable_lda_object(obj):
     attribute_dict['random_state_'] = obj.random_state_.get_state()
     flat_attribute_dict = flattener(attribute_dict)
     assert unique_serialization(flat_attribute_dict)[0]
-    print('Warning: Attempting to uniquely serialize an LDA object')
+    print('Warning: Attempting to uniquely serialize a '
+          'LatentDirichletAllocation object')
     return flat_attribute_dict
 
 
 def serializable_vectorizer_object(obj):
     attribute_dict = copy.deepcopy(vars(obj))
     assert unique_serialization(attribute_dict)[0]
-    print('Warning: Attempting to uniquely serialize an vectorizer object')
+    print('Warning: Attempting to uniquely serialize a CountVectorizer object')
     return attribute_dict
 
 
