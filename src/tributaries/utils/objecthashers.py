@@ -45,6 +45,7 @@ def serializable_lda_object(obj):
     attribute_dict['random_state_'] = obj.random_state_.get_state()
     flat_attribute_dict = flattener(attribute_dict)
     assert unique_serialization(flat_attribute_dict)[0]
+    print('Attempting to uniquely serialize an LDA object')
     return flat_attribute_dict
 
 
