@@ -11,7 +11,7 @@ setup(name='tributaries',
       packages=find_packages('src'),
       include_package_data=True,
       package_dir={'': 'src'},
-      install_requires=['stdlib_list', 'dill', 'undecorated'],
+      install_requires=['stdlib_list', 'dill', 'undecorated', 'pandas'],
       zip_safe=False,
       entry_points={
         'console_scripts': [
