@@ -24,7 +24,7 @@ if importlib.util.find_spec('scipy'):
 
 if importlib.util.find_spec('sklearn'):
     packages_list.append('sklearn')
-    from sklearn.decomposition.online_lda import LatentDirichletAllocation
+    from sklearn.decomposition import LatentDirichletAllocation
     from sklearn.feature_extraction.text import CountVectorizer
 
 
