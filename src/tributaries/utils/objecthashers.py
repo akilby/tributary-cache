@@ -4,7 +4,7 @@ import importlib
 import pickle
 import tempfile
 
-from utils.utils import flattener
+from .utils import flattener
 
 packages_list = []
 
