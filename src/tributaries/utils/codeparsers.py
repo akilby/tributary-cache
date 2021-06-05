@@ -115,6 +115,8 @@ def get_all_children(func, args, kwargs,
 
     child_funcs = child_funcs + get_cached_children(func, globals_list)
     child_funcs = [x for x in child_funcs if x not in exclusion_list]
+    child_funcs = [x for x in child_funcs if not
+                   isinstance(globals_list[x], types.BuiltinFunctionType)]
     child_funcs = list(set(child_funcs))
 
     # Non-callable globals
