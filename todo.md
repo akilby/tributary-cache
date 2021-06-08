@@ -24,3 +24,5 @@ like PD_FUNCT in utils
 * Figure out exactly how I'm distinguishing between user-written and installed from other sources (including, e.g., pandas). check_external and get_system_packages are doing the work, but it seems like these can't distinguish between user-written and external if it hasn't been installed using the editable flag: `pip install -e .`
 
 * The cacher cannot tell a function is a dependency if it is defined inside the function (not a problem for the function itself as the code is part of the function, but any dependencies inside that function will be missed). There is also a similar issue if the function is imported inside the function rather than at the module level.
+
+* The cacher cannot detect updates to a data file read in from disk. For now, best practice should be using timestamps for the file name, or some other way of forcing recognition that the file has changed.
